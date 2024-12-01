@@ -25,9 +25,10 @@ namespace ClientWPF
             InitializeComponent();
         }
 
-        private void NavBarMaxButt_Click(object sender, RoutedEventArgs e)
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
-
+            if (e.ChangedButton == MouseButton.Left)
+                this.DragMove();
         }
     }
 }

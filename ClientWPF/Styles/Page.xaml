@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Style x:Key="DefaultPage" TargetType="Grid">
-        <Setter Property="Background" Value="#191919"/>
+    <Style x:Key="DefaultPage" TargetType="UserControl">
+        <Setter Property="Foreground" Value="{DynamicResource Pallete3}"/>
+        <Setter Property="Padding" Value="20"/>
     </Style>
 </ResourceDictionary>

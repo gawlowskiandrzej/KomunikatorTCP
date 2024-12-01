@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:ClientWPF.Views"
              xmlns:vm="clr-namespace:ClientWPF.ViewModels"
              mc:Ignorable="d" 
+             Style="{StaticResource DefaultPage}"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.DataContext>
         <vm:MessagesVM/>

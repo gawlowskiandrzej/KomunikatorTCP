@@ -58,7 +58,16 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Models\Controlers\ConnectControler.cs" />
+    <Compile Include="Models\Controlers\MessageControler.cs" />
+    <Compile Include="Models\Interfaces\IConnector.cs" />
+    <Compile Include="Models\Interfaces\IReceiver.cs" />
+    <Compile Include="Models\Interfaces\ISender.cs" />
+    <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\Type.cs" />
     <Compile Include="Models\NavBarMaxButt.cs" />
+    <Compile Include="Models\Room.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="ViewModels\HomeVM.cs" />
     <Compile Include="ViewModels\LoginVM.cs" />
     <Compile Include="ViewModels\MainVM.cs" />
@@ -94,6 +103,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Styles\Button.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\Colors.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -148,6 +161,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Resource Include="Fonts\Rubik-Medium.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Fonts\Rubik-Regular.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -156,8 +175,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Fonts\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
