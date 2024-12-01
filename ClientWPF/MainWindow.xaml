@@ -3,10 +3,61 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mod="clr-namespace:ClientWPF.Models"
         xmlns:local="clr-namespace:ClientWPF"
+        xmlns:vm="clr-namespace:ClientWPF.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="ClientWPF" Height="600" Width="850"
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        Background="Transparent">
+    <Window.DataContext>
+        <vm:MainVM/>
+    </Window.DataContext>
     <Grid>
-        
+
+        <Border Grid.ColumnSpan="2" Grid.RowSpan="2" Background="#FFF05A" CornerRadius="20"/>
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.12*"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.3*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Margin="20 0 0 0"
+                       VerticalAlignment="Center" 
+                       Text="GG"
+                       FontWeight="Bold"
+                       FontSize="18"
+                       Foreground="#FFAA5A"/>
+
+            <StackPanel Grid.Row="1">
+                <Button Content="Login" Command="{Binding LoginCommand}"/>
+                <Button Content="Home" Command="{Binding HomeCommand}"/>
+                <Button Content="Wiadomości"/>
+                <Button Content="Grupy"/>
+            </StackPanel>
+
+            <ContentControl 
+                            Grid.Column="1" 
+                            Grid.Row="1" 
+                            Content="{Binding CurrentView}" />
+
+
+            <StackPanel Margin="0 0 20 0" Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="Button" BasedOn="{StaticResource NavbarOperativeButts}"/>
+                </StackPanel.Resources>
+                <Button Content="_" Command="{Binding MinimalizeCommand}"/>
+                <mod:NavBarMaxButt Content="□" Style="{StaticResource NavbarOperativeButts}"/>
+                <Button Content="X" Command="{Binding ExitCommand}"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>

@@ -13,21 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ClientWPF
+namespace ClientWPF.Views
 {
     /// <summary>
-    /// Logika interakcji dla klasy MainWindow.xaml
+    /// Logika interakcji dla klasy Messages.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class Messages : UserControl
     {
-        public MainWindow()
+        public Messages()
         {
             InitializeComponent();
-        }
-
-        private void NavBarMaxButt_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }
