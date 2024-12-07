@@ -19,4 +19,8 @@
         <view:Rooms/>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type vm:UsersSideBarVM}">
+        <view:UsersSideBar/>
+    </DataTemplate>
+
 </ResourceDictionary>

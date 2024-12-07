@@ -41,40 +41,54 @@
                        FontSize="18"
                        Foreground="{DynamicResource Pallete3}"/>
 
-            <StackPanel Margin="20 25 20 10" Grid.Row="1">
-                <StackPanel.Resources>
-                    <Style TargetType="Button" BasedOn="{StaticResource SidebarButt}"/>
-                </StackPanel.Resources>
-                <Button Content="Login" Command="{Binding LoginCommand}"/>
-                <Button Content="Home" Command="{Binding HomeCommand}"/>
-                <Button Content="Wiadomości"/>
-                <Button Content="Grupy"/>
-            </StackPanel>
 
-            <Border Margin="30" Background="White" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderThickness="3" BorderBrush="#F0F0F0">
+            <Border Margin="15" Background="White" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderThickness="3" BorderBrush="#F0F0F0">
                 <ContentControl 
                                 Grid.Column="1" 
                                 Grid.Row="1" 
                                 Content="{Binding CurrentView}" />
             </Border>
 
-
-            <Grid Margin="0 0 30 0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
+            <Grid Margin="30 0 0 0" Grid.Row="0" Grid.Column="1">
+                <Grid.Resources>
+                    <Style TargetType="Button" BasedOn="{StaticResource SidebarButt}"/>
+                </Grid.Resources>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="1.5*"/>
                 </Grid.ColumnDefinitions>
-                <Grid.Resources>
-                    <Style TargetType="Button" BasedOn="{StaticResource NavbarOperativeButts}"/>
-                </Grid.Resources>
-                <Button Grid.Column="0" Content="_" FontSize="13" Command="{Binding MinimalizeCommand}"/>
-                <mod:NavBarMaxButt Grid.Column="1" Content="🗖" FontSize="15" Style="{StaticResource NavbarOperativeButts}"/>
-                <Button Content="X" Foreground="#CE0000" FontSize="15" Grid.Column="2" Command="{Binding ExitCommand}"/>
-            </Grid>
+                <!-- Test Button -->
+                <Button Content="Login" Command="{Binding LoginCommand}"/>
+                <Button Grid.Column="1" Content="Home" Command="{Binding HomeCommand}"/>
+                <Button Grid.Column="2" Content="Wiadomości"/>
+                <Button Grid.Column="3" Content="Grupy"/>
 
+                <Grid Margin="0 0 0 0" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.Resources>
+                        <Style TargetType="Button" BasedOn="{StaticResource NavbarOperativeButts}"/>
+                    </Grid.Resources>
+                    <Button Grid.Column="0" Content="_" FontSize="13" Command="{Binding MinimalizeCommand}"/>
+                    <mod:NavBarMaxButt Grid.Column="1" Content="🗖" FontSize="15" Style="{StaticResource NavbarOperativeButts}"/>
+                    <Button Content="X" Foreground="#CE0000" FontSize="15" Grid.Column="2" Command="{Binding ExitCommand}"/>
+                </Grid>
+            </Grid>
+            
             <Grid Grid.ColumnSpan="2" Panel.ZIndex="-1">
                 <Border Grid.ColumnSpan="2" Background="{StaticResource Pallete2}" CornerRadius="15 15 0 0"/>
+            </Grid>
+
+            <Grid Grid.Column="0" Grid.Row="1">
+                <ContentControl>
+                    <vm:UsersSideBarVM/>
+                </ContentControl>
             </Grid>
         </Grid>
     </Grid>

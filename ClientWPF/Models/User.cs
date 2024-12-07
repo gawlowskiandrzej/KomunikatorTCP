@@ -7,10 +7,20 @@ namespace ClientWPF.Models
         public MessageControler MessageControler { get; set; }
         public ConnectControler ConnectControler { get; set; }
         public bool IsConnected { get; set; }
+        public string Name { get; set; }
         public User()
         {
-            ConnectControler = new ConnectControler();
-            MessageControler = new MessageControler(ConnectControler.Client);
+            
+        }
+        public User(string name)
+        {
+            //ConnectControler = new ConnectControler();
+            //MessageControler = new MessageControler(ConnectControler.Client);
+            Name = name;
+        }
+        public override string ToString()
+        {
+            return this.Name;
         }
 
         public void Connect()
