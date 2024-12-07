@@ -36,11 +36,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="0" Grid.Row="1">
-                <ContentControl>
-                    <vm:UsersSideBarVM/>
-                </ContentControl>
-            </Grid>
+            
 
             <TextBlock Margin="35 0 0 0"
                        VerticalAlignment="Center" 
@@ -57,6 +53,9 @@
                                 Content="{Binding CurrentView}"/>
             </Border>
 
+            <Grid Grid.Column="0" Grid.Row="1">
+                <ContentControl Content="{Binding UsersSideBarVM}"/>
+            </Grid>
             <Grid Margin="30 0 0 0" Grid.Row="0" Grid.Column="1">
                 <Grid.Resources>
                     <Style TargetType="Button" BasedOn="{StaticResource SidebarButt}"/>

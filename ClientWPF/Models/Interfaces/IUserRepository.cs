@@ -6,5 +6,6 @@ namespace ClientWPF.Models.Interfaces
     {
         IEnumerable<User> GetUsers();
         User GetSelectedUser();
+        void SetSelection(User user);
     }
 }

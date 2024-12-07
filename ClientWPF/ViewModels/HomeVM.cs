@@ -13,12 +13,16 @@ namespace ClientWPF.ViewModels
         public ICommand SendMessgeCommand { get; set; }
         public ICommand SendCommand { get; set; }
 
-
+        public HomeVM(User selectedUser):base()
+        {
+            CurrentUser = selectedUser;
+        }
         public HomeVM()
         {
             SendMessgeCommand = new RelayCommand(SendMessage);
             SendCommand = new RelayCommand(Send);
-            CurrentUser = MainVM.UserRepository.GetSelectedUser();
+            if (CurrentUser == null)
+                CurrentUser = MainVM.UserRepository.GetSelectedUser();
         }
 
         public void SendMessage(object obj) => new User().Connect();

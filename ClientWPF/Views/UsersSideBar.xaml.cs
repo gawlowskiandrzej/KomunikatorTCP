@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows.Controls;
 
 namespace ClientWPF.Views
 {
@@ -7,6 +8,8 @@ namespace ClientWPF.Views
     /// </summary>
     public partial class UsersSideBar : UserControl
     {
+        public event SelectionChangedEvent SelectionChanged;
+        public delegate void SelectionChangedEvent(object sender, EventArgs e);
         public UsersSideBar()
         {
             InitializeComponent();

@@ -24,9 +24,9 @@
                         </Grid>
                         <Border Grid.ColumnSpan="2" CornerRadius="20" Style="{DynamicResource SelectedUserBorder}"/>
                         <Grid Grid.Column="1">
-                            <TextBlock Style="{StaticResource BiggerNormal}" Foreground="{StaticResource Pallete3}" Text="{Binding Name}" />
+                            <TextBlock Style="{DynamicResource BiggerNormal}" Foreground="{DynamicResource Pallete3}" Text="{Binding Name}" />
                         </Grid>
-                        <Button Grid.ColumnSpan="2" Background="Transparent" BorderThickness="0" Command="{Binding DataContext.SelectUserCommand, RelativeSource={RelativeSource AncestorType=ListView}}"/>
+                        <Button Grid.ColumnSpan="2" Background="Transparent" BorderThickness="0" Command="{Binding DataContext.SelectUserCommand, RelativeSource={RelativeSource AncestorType=ListView}}" CommandParameter="{Binding}"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

@@ -33,7 +33,19 @@ namespace ClientWPF.Models
 
         public User GetSelectedUser() => Users.Where(_ => _.IsSelected).First();
 
+
         public IEnumerable<User> GetUsers() => Users;
+
+        public void SetSelection(User selectedUser)
+        {
+            foreach (var user in users)
+            {
+                user.IsSelected = false;
+                if (selectedUser.Name == user.Name)
+                    user.IsSelected = true;
+            }
+            
+        }
 
         //protected void OnPropertyChanged([CallerMemberName] string name = null)
         //{

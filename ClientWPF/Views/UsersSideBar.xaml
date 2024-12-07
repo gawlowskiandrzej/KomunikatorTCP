@@ -8,9 +8,9 @@
              mc:Ignorable="d" 
              Style="{StaticResource DefaultPage}"
              d:DesignHeight="600" d:DesignWidth="300">
-    <UserControl.DataContext>
+    <d:UserControl.DataContext>
         <vm:UsersSideBarVM/>
-    </UserControl.DataContext>
+    </d:UserControl.DataContext>
     <Grid Width="auto">
         <ListView Width="auto" Height="auto" BorderThickness="0" Background="Transparent" ItemsSource="{Binding Users}" ItemContainerStyle="{StaticResource UserCard}" SelectedItem="{Binding SelectedUser}"/>
     </Grid>

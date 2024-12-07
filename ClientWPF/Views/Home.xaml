@@ -9,9 +9,6 @@
              mc:Ignorable="d" 
              Style="{StaticResource DefaultPage}"
              d:DesignHeight="500" d:DesignWidth="800">
-    <UserControl.DataContext>
-        <vm:HomeVM/>
-    </UserControl.DataContext>
     <Grid Height="auto" Width="auto">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.5*"/>
