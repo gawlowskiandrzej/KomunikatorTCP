@@ -6,7 +6,7 @@
         <Setter Property="VerticalAlignment" Value="Top"/>
     </Style>
     <Style x:Key="Normal" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontSize" Value="13"/>
         <Setter Property="Foreground" Value="{DynamicResource Pallete5}"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>

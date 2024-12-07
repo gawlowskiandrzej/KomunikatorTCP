@@ -14,7 +14,9 @@
         WindowStyle="None"
         TextBlock.Foreground="Black"
         MouseDown="Window_MouseDown"
-        Background="Transparent">
+        Background="Transparent"
+        Icon="./icon.png"
+        >
     <Window.DataContext>
         <vm:MainVM/>
     </Window.DataContext>
@@ -42,7 +44,7 @@
                        Foreground="{DynamicResource Pallete3}"/>
 
 
-            <Border Margin="15" Background="White" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderThickness="3" BorderBrush="#F0F0F0">
+            <Border Margin="15" Background="White" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderThickness="3" BorderBrush="{DynamicResource BackGround}">
                 <ContentControl 
                                 Grid.Column="1" 
                                 Grid.Row="1" 
@@ -66,7 +68,7 @@
                 <Button Grid.Column="2" Content="Wiadomości"/>
                 <Button Grid.Column="3" Content="Grupy"/>
 
-                <Grid Margin="0 0 0 0" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Grid Margin="0 0 15 0" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Right">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>

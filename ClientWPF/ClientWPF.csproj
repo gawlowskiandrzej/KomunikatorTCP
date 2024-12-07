@@ -185,6 +185,7 @@
     <Compile Include="Models\NavBarMaxButt.cs" />
     <Compile Include="Models\Room.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="ViewModels\CurrentMessagesVM.cs" />
     <Compile Include="ViewModels\HomeVM.cs" />
     <Compile Include="Models\Interfaces\IUserRepository.cs" />
     <Compile Include="ViewModels\LoginVM.cs" />
@@ -193,6 +194,9 @@
     <Compile Include="ViewModels\RoomsVM.cs" />
     <Compile Include="ViewModels\UsersSideBarVM.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="Views\CurrentMessages.xaml.cs">
+      <DependentUpon>CurrentMessages.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Home.xaml.cs">
       <DependentUpon>Home.xaml</DependentUpon>
     </Compile>
@@ -240,6 +244,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Styles\StatusBorder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Styles\TextBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -251,6 +259,10 @@
     <Page Include="Styles\UserCard.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\CurrentMessages.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Home.xaml">
       <SubType>Designer</SubType>
@@ -306,6 +318,8 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="icon.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

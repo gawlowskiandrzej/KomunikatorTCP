@@ -8,24 +8,24 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListViewItem">
-                    <Grid Margin="0 0 0 14">
+                    <Grid Margin="0 2 0 14">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
                         <Grid Width="40" Height="40" Panel.ZIndex="1" Margin="15 10 0 10">
-                            <Border CornerRadius="50" Background="LightGray"/>
+                            <Border CornerRadius="50" Background="{DynamicResource BackGround}"/>
                             <iconPacks:PackIconModern Width="20"
                                                       Opacity="0.7"
                               Height="20"
                               Kind="User" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <Border HorizontalAlignment="Right" Height="10" Width="10" CornerRadius="10" Margin="0 0 3 1" VerticalAlignment="Bottom" Style="{DynamicResource Status}"/>
                         </Grid>
                         <Border Grid.ColumnSpan="2" Background="{StaticResource Pallete5}" CornerRadius="20"/>
                         <Grid Grid.Column="1">
                             <TextBlock Style="{StaticResource BiggerNormal}" Foreground="{StaticResource Pallete3}" Text="{Binding Name}" />
                         </Grid>
-                        
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
