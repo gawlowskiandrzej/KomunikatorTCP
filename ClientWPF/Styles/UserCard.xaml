@@ -13,7 +13,6 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-
                         <Grid Width="40" Height="40" Panel.ZIndex="1" Margin="15 10 0 10">
                             <Border CornerRadius="50" Background="{DynamicResource BackGround}"/>
                             <iconPacks:PackIconModern Width="20"
@@ -22,7 +21,7 @@
                               Kind="User" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                             <Border HorizontalAlignment="Right" Height="10" Width="10" CornerRadius="10" Margin="0 0 3 1" VerticalAlignment="Bottom" Style="{DynamicResource Status}"/>
                         </Grid>
-                        <Border Grid.ColumnSpan="2" Background="{StaticResource Pallete5}" CornerRadius="20"/>
+                        <Border Grid.ColumnSpan="2" CornerRadius="20" Style="{DynamicResource SelectedUserBorder}"/>
                         <Grid Grid.Column="1">
                             <TextBlock Style="{StaticResource BiggerNormal}" Foreground="{StaticResource Pallete3}" Text="{Binding Name}" />
                         </Grid>
@@ -30,6 +29,5 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        
     </Style>
 </ResourceDictionary>

@@ -11,4 +11,16 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
+    
+    <Style x:Key="SelectedUserBorder" TargetType="Border">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                <Setter Property="Background" Value="{StaticResource Pallete1}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsSelected}" Value="False">
+                <Setter Property="Background" Value="{StaticResource Pallete5}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    
 </ResourceDictionary>

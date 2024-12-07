@@ -17,7 +17,7 @@
                 <ResourceDictionary Source="Styles/Colors.xaml"/>
                 <ResourceDictionary Source="DataTemplate.xaml"/>
                 <ResourceDictionary Source="Styles/UserCard.xaml"/>
-                <ResourceDictionary Source="Styles/StatusBorder.xaml"/>
+                <ResourceDictionary Source="Styles/Border.xaml"/>
 
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

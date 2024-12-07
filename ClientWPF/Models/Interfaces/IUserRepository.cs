@@ -2,7 +2,7 @@
 
 namespace ClientWPF.Models.Interfaces
 {
-    internal interface IUserRepository
+    interface IUserRepository
     {
         IEnumerable<User> GetUsers();
     }

@@ -8,7 +8,7 @@
              xmlns:vm="clr-namespace:ClientWPF.ViewModels"
              mc:Ignorable="d" 
              Style="{StaticResource DefaultPage}"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="500" d:DesignWidth="800">
     <UserControl.DataContext>
         <vm:HomeVM/>
     </UserControl.DataContext>
@@ -19,13 +19,25 @@
             <ColumnDefinition Width="0.5*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="0.11*"/>
             <RowDefinition/>
-            <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="0.12*"/>
         </Grid.RowDefinitions>
 
-        <Grid>
-            
+         <!-- Selected user -->
+        <Grid DataContext="{Binding SelectedUser}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.4*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.ColumnSpan="2" CornerRadius="20" Background="{DynamicResource Pallete2}"/>
+            <Grid Grid.ColumnSpan="1" HorizontalAlignment="Right">
+                <Border Height="33" Width="33" CornerRadius="20" Background="{DynamicResource BackGround}" />
+                <iconPacks:PackIconBootstrapIcons Kind="Person" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+            <Grid Grid.Column="1">
+                <TextBlock Text="{Binding Name}" FontSize="14" Style="{DynamicResource BiggerNormal}" Foreground="{StaticResource Pallete4}"/>
+            </Grid>
         </Grid>
 
         <!-- Messeges View -->
@@ -35,10 +47,12 @@
 
 
         <Grid Grid.Row="100" Grid.ColumnSpan="100">
-            <Border CornerRadius="20" Background="{DynamicResource BackGround}"/>
-            <Button Margin="10 7" Style="{StaticResource SendButton}" HorizontalAlignment="Right">
+            
+            <Border x:Name="bord" CornerRadius="20" Background="{DynamicResource BackGround}"/>
+            <Button Margin="10 7" Style="{StaticResource SendButton}" HorizontalAlignment="Right" Command="{Binding SendCommand}">
                 <iconPacks:PackIconModern Margin="12 3 12 0" HorizontalAlignment="Center" VerticalAlignment="Center" Height="20" Width="20" Kind="Message"/>
             </Button>
+            <TextBox Background="Transparent" VerticalContentAlignment="Center" BorderThickness="0" Padding="20 10" FontSize="13" Text="Test"/>
         </Grid>
         
     </Grid>
