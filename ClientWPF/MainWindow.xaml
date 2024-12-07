@@ -36,6 +36,12 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
+            <Grid Grid.Column="0" Grid.Row="1">
+                <ContentControl>
+                    <vm:UsersSideBarVM/>
+                </ContentControl>
+            </Grid>
+
             <TextBlock Margin="35 0 0 0"
                        VerticalAlignment="Center" 
                        Text="Halo-Halo"
@@ -48,7 +54,7 @@
                 <ContentControl 
                                 Grid.Column="1" 
                                 Grid.Row="1" 
-                                Content="{Binding CurrentView}" />
+                                Content="{Binding CurrentView}"/>
             </Border>
 
             <Grid Margin="30 0 0 0" Grid.Row="0" Grid.Column="1">
@@ -82,15 +88,9 @@
                     <Button Content="X" Foreground="#CE0000" FontSize="15" Grid.Column="2" Command="{Binding ExitCommand}"/>
                 </Grid>
             </Grid>
-            
+
             <Grid Grid.ColumnSpan="2" Panel.ZIndex="-1">
                 <Border Grid.ColumnSpan="2" Background="{StaticResource Pallete2}" CornerRadius="15 15 0 0"/>
-            </Grid>
-
-            <Grid Grid.Column="0" Grid.Row="1">
-                <ContentControl>
-                    <vm:UsersSideBarVM/>
-                </ContentControl>
             </Grid>
 
         </Grid>

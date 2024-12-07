@@ -12,6 +12,6 @@
         <vm:UsersSideBarVM/>
     </UserControl.DataContext>
     <Grid Width="auto">
-        <ListView Width="auto" Height="auto" BorderThickness="0" Background="Transparent" ItemsSource="{Binding Users}" ItemContainerStyle="{StaticResource UserCard}"/>
+        <ListView Width="auto" Height="auto" BorderThickness="0" Background="Transparent" ItemsSource="{Binding Users}" ItemContainerStyle="{StaticResource UserCard}" SelectedItem="{Binding SelectedUser}"/>
     </Grid>
 </UserControl>

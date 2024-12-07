@@ -1,17 +1,27 @@
-﻿using ClientWPF.Models;
-using ClientWPF.Models.Interfaces;
+﻿using ClientWPF.Commands;
+using ClientWPF.Models;
 using System.Collections.Generic;
-using System.Linq;
+using System.Windows;
+using System.Windows.Input;
 
 namespace ClientWPF.ViewModels
 {
     internal class UsersSideBarVM
     {
-        public List<User> Users { get; set; }
+        public IEnumerable<User> Users { get; set; }
+        public User SelectedUser { get; set; }
+        public ICommand SelectUserCommand { get; set; }
 
         public UsersSideBarVM()
         {
-            Users = new Repository().GetUsers().ToList();
+            Users = MainVM.UserRepository.GetUsers();
+            SelectedUser = MainVM.UserRepository.GetSelectedUser();
+            SelectUserCommand = new RelayCommand(SelectUser);
+        }
+        public void SelectUser(object obj)
+        {
+            MessageBox.Show("Selected");
+
         }
     }
 }

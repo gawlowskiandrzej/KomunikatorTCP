@@ -9,10 +9,8 @@ namespace ClientWPF.ViewModels
 {
     internal class HomeVM
     {
-        static IEnumerable<User> Users { get; set; }
-        public User SelectedUser { get; set; }
+        public User CurrentUser { get; set; }
         public ICommand SendMessgeCommand { get; set; }
-
         public ICommand SendCommand { get; set; }
 
 
@@ -20,9 +18,7 @@ namespace ClientWPF.ViewModels
         {
             SendMessgeCommand = new RelayCommand(SendMessage);
             SendCommand = new RelayCommand(Send);
-            Users = new Repository().GetUsers();
-            SelectedUser = Users.First();
-            SelectedUser.IsSelected = true;
+            CurrentUser = MainVM.UserRepository.GetSelectedUser();
         }
 
         public void SendMessage(object obj) => new User().Connect();

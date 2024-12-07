@@ -13,6 +13,7 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
+                        
                         <Grid Width="40" Height="40" Panel.ZIndex="1" Margin="15 10 0 10">
                             <Border CornerRadius="50" Background="{DynamicResource BackGround}"/>
                             <iconPacks:PackIconModern Width="20"
@@ -25,6 +26,7 @@
                         <Grid Grid.Column="1">
                             <TextBlock Style="{StaticResource BiggerNormal}" Foreground="{StaticResource Pallete3}" Text="{Binding Name}" />
                         </Grid>
+                        <Button Grid.ColumnSpan="2" Background="Transparent" BorderThickness="0" Command="{Binding DataContext.SelectUserCommand, RelativeSource={RelativeSource AncestorType=ListView}}"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

@@ -7,7 +7,7 @@ namespace ClientWPF.Models
         public MessageControler MessageControler { get; set; }
         public ConnectControler ConnectControler { get; set; }
         public bool IsConnected { get; set; } = false;
-        public bool IsSelected { get; set; } = true;
+        public bool IsSelected { get; set; } = false;
         public string Name { get; set; }
         public User()
         {
