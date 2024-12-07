@@ -1,0 +1,29 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vm="clr-namespace:ClientWPF.ViewModels"
+                    xmlns:view="clr-namespace:ClientWPF.Views">
+
+    <DataTemplate DataType="{x:Type vm:HomeVM}">
+        <view:Home/>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type vm:LoginVM}">
+        <view:Login/>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type vm:MessagesVM}">
+        <view:Messages/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:RoomsVM}">
+        <view:Rooms/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:UsersSideBarVM}">
+        <view:UsersSideBar/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:CurrentMessagesVM}">
+        <view:CurrentMessages/>
+    </DataTemplate>
+
+</ResourceDictionary>
