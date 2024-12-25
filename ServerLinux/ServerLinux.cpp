@@ -14,6 +14,7 @@
 #define PORT 8080
 #define BUFFER_SIZE 1024
 
+std::vector<clientStruct*> clients;
 
 #pragma region HelpFunctions
 int numberOfCharsInArray(char* array) {
@@ -66,7 +67,18 @@ void translatePacket(packetStruct* packet)
 
 void sendMessage(std::string usernameSRC, std::string usernameDST, std::string message)
 {
-
+    int clientDesc = -1;
+    
+    for (size_t i = 0; i < clients.size(); i++)
+    {
+        clientStruct* client = clients[i];
+        if (usernameDST == client->username)
+        {
+            clientDesc = client->cfd; break;
+        }
+    }
+    //std::string message = "1:" + usernameSRC + ':' + usernameDST;
+    write(clientDesc, &message, message.size());
 }
 
 void handle_client(void* arg)
