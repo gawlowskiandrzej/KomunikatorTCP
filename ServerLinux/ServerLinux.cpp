@@ -4,6 +4,8 @@
 #include <vector>
 #include <map>
 #include <cstring>
+#include <algorithm>
+#include <string>
 #include <netinet/in.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -14,105 +16,137 @@
 #define PORT 8080
 #define BUFFER_SIZE 1024
 
-std::vector<clientStruct*> clients;
+std::vector<class Client*> clients;
+std::vector<std::string> messages;
+std::mutex clients_mutex;
 
 #pragma region HelpFunctions
-int numberOfCharsInArray(char* array) {
-    int numberOfChars = 0;
-    while (*array != '\0' || *array != '\n') {
-        numberOfChars++; array++;
-    }
-    return numberOfChars;
+int numberOfCharsInArray(const std::string& str) {
+    return str.length();
 }
-std::vector<std::string> split_string(const std::string& str, char delim = ' ') {
+
+std::vector<std::string> split_string(const std::string& str, char delim = ':') {
     std::vector<std::string> tokens;
     std::string token;
 
-    for (size_t i = 0; i < str.length(); i++)
-    {
-        if (str[i] != delim)
-        {
+    for (size_t i = 0; i < str.length(); i++) {
+        if (str[i] != delim) {
             token.push_back(str[i]);
         }
-        else { tokens.push_back(token); token.clear(); }
+        else {
+            tokens.push_back(token);
+            token.clear();
+        }
+    }
+    if (!token.empty()) {
+        tokens.push_back(token);
     }
     return tokens;
 }
 #pragma endregion
 
-struct packetStruct {
+class Packet {
+public:
     int packetId;
-    char packetBuffer[BUFFER_SIZE];
+    std::string packetBuffer;
+
+    Packet(int id, const std::string& buffer) : packetId(id), packetBuffer(buffer) {}
 };
 
-struct clientStruct {
+class Client {
+public:
     int cfd; // client socket
-    char username[255]; // username
-    struct sockaddr_in caddr; // client addres info
+    bool isOnline = true;
+    std::string username; // username
+    struct sockaddr_in caddr; // client address info
+
+    Client(int fd, const sockaddr_in& addr) : cfd(fd), caddr(addr) {}
+
+    ~Client() {
+        close(cfd);
+    }
 };
 
-void translatePacket(packetStruct* packet)
-{
-    // Translating packets to call functions
-
-    int packetId = packet->packetId;
-
-    switch (packetId)
-    {
-        case 1: { std::vector<std::string>splitted = split_string(packet->packetBuffer, ':'); sendMessage(splitted[0], splitted[1], splitted[2]); break;}
-        default:
-            break;
-    }
-}
-
-void sendMessage(std::string usernameSRC, std::string usernameDST, std::string message)
-{
-    int clientDesc = -1;
+void sendMessage(const std::string& message) {
     
-    for (size_t i = 0; i < clients.size(); i++)
-    {
-        clientStruct* client = clients[i];
-        if (usernameDST == client->username)
-        {
-            clientDesc = client->cfd; break;
+    std::vector<std::string> splitted = split_string(message, ':');
+
+    std::lock_guard<std::mutex> lock(clients_mutex);
+    for (size_t i = 0; i < clients.size(); i++) {
+        Client* client = clients[i];
+        if (splitted[2] == client->username) {
+            if (client->isOnline)
+            {
+                write(client->cfd, message.c_str(), message.size());
+            }
+            else
+            {
+                messages.push_back(message);
+            }
+            return;
         }
     }
-    //std::string message = "1:" + usernameSRC + ':' + usernameDST;
-    write(clientDesc, &message, message.size());
 }
 
-void handle_client(void* arg)
-{
-    char buffer[BUFFER_SIZE];
+void handle_client(void* arg) {
+    std::string buffer;
 
-    struct clientStruct* c = (struct clientStruct*)arg;
+    Client* c = (Client*)arg;
 
     printf("client %s connected \n", inet_ntoa((struct in_addr)c->caddr.sin_addr));
-    memset(c->username, 0, 255);
-    // Getting username
-    recv(c->cfd, c->username,255, 0);
 
-    while (true)
-    {
-        memset(buffer, 0, BUFFER_SIZE);
-        int bytes_received = recv(c->cfd, buffer, BUFFER_SIZE, 0);
 
-        if (bytes_received <= 0)
-        {
-            printf("client has disconected!");
+    while (true) {
+        buffer.clear();
+        char tempBuffer[BUFFER_SIZE];
+        memset(tempBuffer, 0, BUFFER_SIZE);
+        int bytes_received = recv(c->cfd, tempBuffer, BUFFER_SIZE, 0);
+
+        if (bytes_received <= 0) {
+            printf("client has disconnected!\n");
             break;
         }
-        else 
-        {
-            printf("client %s send %d bytes -> %s", c->username, bytes_received, buffer);
+        else {
+            buffer = tempBuffer;
+            std::string packetId = split_string(buffer, ':')[0];
+            Packet* p = new Packet(std::stoi(packetId), buffer);
+            sendMessage(p->packetBuffer);
+            delete p;
         }
-       
     }
 
-    close(c->cfd);
+    std::lock_guard<std::mutex> lock(clients_mutex);
+    {
+        for (size_t i = 0; i < clients.size(); i++) {
+            Client* client = clients[i];
+            if (client->cfd == c->cfd) {
+                clients.erase(clients.begin() + i);
+                delete client;
+                break;
+            }
+        }
+    }
 }
 
+void Connect(int clientSocket, sockaddr_in clientAddress, std::string username)
+{
+    std::lock_guard<std::mutex> lock(clients_mutex);
+    for (int i = 0; i < clients.size(); i++)
+    {
+        if (clients[i]->username == username)
+        {
+            clients[i]->isOnline = true;
+            std::thread(handle_client, clients[i]).detach();
+            return;
+        }
+    }
+    Client* c = new Client(clientSocket, clientAddress);
+    c->username = username;
+    clients.push_back(c);
+    std::thread(handle_client, c).detach();
+}
 int main() {
+    char tempBuffer[255];
     int server_socket, client_socket, on = 1;
     struct sockaddr_in server_address, client_address;
     socklen_t client_address_len = sizeof(client_address);
@@ -143,17 +177,19 @@ int main() {
     printf("Server is running on port %d \n", PORT);
 
     while (true) {
-        struct clientStruct* c = (struct clientStruct*)malloc(sizeof(struct clientStruct));
-
-        c->cfd = accept(server_socket, (struct sockaddr*)&c->caddr, &client_address_len);
-        if (c->cfd == -1) {
+        sockaddr_in client_addr;
+        client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &client_address_len);
+        if (client_socket == -1) {
             printf("Failed to accept client connection.\n");
             continue;
         }
-        if (c->cfd > -1)
-        {
-            std::thread(handle_client, c).detach();
-        }
+
+        memset(tempBuffer, 0, 255);
+        recv(client_socket, tempBuffer, 255, 0);
+        std::string tmpBuff = tempBuffer;
+        tmpBuff.erase(std::remove(tmpBuff.begin(), tmpBuff.end(), '\n'), tmpBuff.cend());
+
+        Connect(client_socket,client_addr,tmpBuff);
     }
 
     close(server_socket);

@@ -1,0 +1,3 @@
+PacketId:Username Source:Username Destination:Message
+
+1:usernameSrc:usernameDst:message
