@@ -2,7 +2,7 @@
 {
     internal interface IReceiver
     {
-        void Receive(string buffer);
+        Message Receive();
         void Receive(Message message);
     }
 }

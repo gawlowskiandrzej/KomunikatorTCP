@@ -13,18 +13,27 @@ namespace ClientWPF.Models.Controlers
         {
             Client = client;
         }
-        
-        public void Receive(string buffer)
+
+        public Message Receive()
         {
-            throw new NotImplementedException();
+            byte[] buff = new byte[4096];
+            int bytesReceived = Client.Receive(buff);
+
+            string data = Encoding.UTF8.GetString(buff, 0, bytesReceived);
+
+
+            string[] splitted = data.Split(':');
+
+            return new Message(splitted[1], splitted[2], splitted[3]);
         }
+
 
         public void Receive(Message message)
         {
             throw new NotImplementedException();
         }
 
-        public void Send(string buffer = "Test")
+        public void Send(string buffer = "1:userSource:userDest:message")
         {
             byte[] messageBytes = Encoding.UTF8.GetBytes(buffer);
             Client.Send(messageBytes);
