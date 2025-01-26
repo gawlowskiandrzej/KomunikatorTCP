@@ -13,7 +13,7 @@ namespace ClientWPF.Models.Controlers
         IPEndPoint Endpoint { get; set; }
         public Socket Client { get;  set; }
 
-        public ConnectControler(string dstAddr = "127.0.0.1", int port = 1234)
+        public ConnectControler(string dstAddr = "192.168.0.102", int port = 8080)
         {
             DstAddr = dstAddr;
             Port = port;
@@ -27,11 +27,11 @@ namespace ClientWPF.Models.Controlers
             {
                 IPAddress dstAd = IPAddress.Parse(DstAddr);
 
-                Endpoint = new IPEndPoint(dstAd, 1234);
+                Endpoint = new IPEndPoint(dstAd, Port);
 
-                Socket socket = new Socket(Endpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                Client = new Socket(Endpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
-                socket.Connect(Endpoint);
+                Client.Connect(Endpoint);
 
                 return true;
             }

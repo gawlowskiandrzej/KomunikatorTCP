@@ -176,7 +176,9 @@
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Models\Controlers\ConnectControler.cs" />
     <Compile Include="Models\Controlers\MessageControler.cs" />
+    <Compile Include="Models\IndexToAlignmentConverter.cs" />
     <Compile Include="Models\Interfaces\IConnector.cs" />
+    <Compile Include="Models\Interfaces\IMessageRepository.cs" />
     <Compile Include="Models\Interfaces\IReceiver.cs" />
     <Compile Include="Models\Interfaces\ISender.cs" />
     <Compile Include="Models\Message.cs" />

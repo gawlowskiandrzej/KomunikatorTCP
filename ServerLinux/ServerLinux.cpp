@@ -78,6 +78,7 @@ void sendMessage(const std::string& message) {
             if (client->isOnline)
             {
                 write(client->cfd, message.c_str(), message.size());
+                printf("Message sended to user %s", client->username.c_str());
             }
             else
             {
@@ -95,6 +96,8 @@ void handle_client(void* arg) {
 
     printf("client %s connected \n", inet_ntoa((struct in_addr)c->caddr.sin_addr));
 
+    printf("Hello %s \n", c->username.c_str());
+
 
     while (true) {
         buffer.clear();
@@ -103,7 +106,7 @@ void handle_client(void* arg) {
         int bytes_received = recv(c->cfd, tempBuffer, BUFFER_SIZE, 0);
 
         if (bytes_received <= 0) {
-            printf("client has disconnected!\n");
+            printf("%s has disconnected!\n", c->username.c_str());
             break;
         }
         else {
@@ -111,6 +114,7 @@ void handle_client(void* arg) {
             std::string packetId = split_string(buffer, ':')[0];
             Packet* p = new Packet(std::stoi(packetId), buffer);
             sendMessage(p->packetBuffer);
+            printf("%s sended: %s", c->username.c_str(), p->packetBuffer.c_str());
             delete p;
         }
     }

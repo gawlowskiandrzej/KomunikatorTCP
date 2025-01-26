@@ -7,10 +7,11 @@ namespace ClientWPF.Models
     internal class User : INotifyPropertyChanged
     {
         private bool _isSelected = false;
+        private bool _isConnected = false;
 
         public MessageControler MessageControler { get; set; }
         public ConnectControler ConnectControler { get; set; }
-        public bool IsConnected { get; set; } = false;
+        public bool IsConnected { get => _isConnected; set { _isConnected = value; OnPropertyChanged(); } }
         public bool IsSelected 
         { 
             get => _isSelected;
@@ -29,6 +30,12 @@ namespace ClientWPF.Models
         {
             //ConnectControler = new ConnectControler();
             //MessageControler = new MessageControler(ConnectControler.Client);
+            Name = name;
+        }
+        public User(string name, bool real)
+        {
+            ConnectControler = new ConnectControler();
+            MessageControler = new MessageControler(ConnectControler.Client);
             Name = name;
         }
 
