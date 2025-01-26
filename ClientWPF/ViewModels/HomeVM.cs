@@ -20,12 +20,12 @@ namespace ClientWPF.ViewModels
         public HomeVM()
         {
             SendMessgeCommand = new RelayCommand(SendMessage);
-            SendCommand = new RelayCommand(Send);
+            SendCommand = new RelayCommand(SendMessage);
             if (CurrentUser == null)
                 CurrentUser = MainVM.UserRepository.GetSelectedUser();
         }
 
-        public void SendMessage(object obj) => new User().Connect();
+        public void SendMessage(object obj) => CurrentUser.MessageControler.Send();
         public void Send(object obj) => MessageBox.Show("Wysyłanie wiadomości");
     }
 }

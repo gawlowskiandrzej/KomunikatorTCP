@@ -48,7 +48,7 @@ namespace ClientWPF.ViewModels
             SelectedUser = UserRepository.GetSelectedUser();
 
             LoginView = new LoginVM();
-            LoginView.PropertyChanged += LoginView_PropertyChanged; ;
+            LoginView.User.PropertyChanged += LoginView_PropertyChanged1;
 
             UsersSideBarVM = new UsersSideBarVM();
             UsersSideBarVM.PropertyChanged += OnUsersSideBarChanged;
@@ -56,9 +56,13 @@ namespace ClientWPF.ViewModels
             CurrentView = new HomeVM();
         }
 
-        private void LoginView_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void LoginView_PropertyChanged1(object sender, PropertyChangedEventArgs e)
         {
-            
+            if (e.PropertyName == nameof(LoginView.User.IsConnected))
+            {
+                // Update CurrentView based on the new SelectedUser
+                (CurrentView as HomeVM).CurrentUser = LoginView.User;
+            }
         }
 
         public void OnUsersSideBarChanged(object sender, PropertyChangedEventArgs e)

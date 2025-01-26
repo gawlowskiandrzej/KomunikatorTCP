@@ -31,10 +31,10 @@ namespace ClientWPF.Models.Controlers
             throw new NotImplementedException();
         }
 
-        public void Send(string buffer = "1:userSource:userDest:message")
+        public void Send(string buffer = "1:UserTest:userDest:message")
         {
             byte[] messageBytes = Encoding.UTF8.GetBytes(buffer);
-            Client.Send(messageBytes);
+            var bytes = Client.Send(messageBytes);
         }
 
         public void Send(Message message)
