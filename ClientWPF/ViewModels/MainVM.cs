@@ -62,6 +62,7 @@ namespace ClientWPF.ViewModels
             {
                 // Update CurrentView based on the new SelectedUser
                 (CurrentView as HomeVM).CurrentUser = LoginView.User;
+                (CurrentView as HomeVM).StartMessageListening();
             }
         }
 

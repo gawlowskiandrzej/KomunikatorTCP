@@ -41,9 +41,8 @@
         </Grid>
 
         <!-- Messeges View -->
-        <ContentControl BorderThickness="0" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3">
-            <vm:MessagesVM/>
-        </ContentControl>
+        <ContentControl Content="{Binding MessagesVM}" BorderThickness="0" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"/>
+
 
 
         <Grid Grid.Row="100" Grid.ColumnSpan="100">
