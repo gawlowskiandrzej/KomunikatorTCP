@@ -22,6 +22,7 @@ namespace ClientWPF.ViewModels
         public ICommand  MinimalizeCommand { get; set; }
 
         public UsersSideBarVM UsersSideBarVM { get; set; }
+        public LoginVM LoginView { get; set; }
 
         public void Home(object obj) => CurrentView = new HomeVM();
         public void Login(object obj) => CurrentView = new LoginVM();
@@ -46,10 +47,23 @@ namespace ClientWPF.ViewModels
             UserRepository = new Repository();
             SelectedUser = UserRepository.GetSelectedUser();
 
+            LoginView = new LoginVM();
+            LoginView.User.PropertyChanged += LoginView_PropertyChanged1;
+
             UsersSideBarVM = new UsersSideBarVM();
             UsersSideBarVM.PropertyChanged += OnUsersSideBarChanged;
 
             CurrentView = new HomeVM();
+        }
+
+        private void LoginView_PropertyChanged1(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(LoginView.User.IsConnected))
+            {
+                // Update CurrentView based on the new SelectedUser
+                (CurrentView as HomeVM).CurrentUser = LoginView.User;
+                (CurrentView as HomeVM).StartMessageListening();
+            }
         }
 
         public void OnUsersSideBarChanged(object sender, PropertyChangedEventArgs e)

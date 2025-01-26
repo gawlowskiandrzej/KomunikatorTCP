@@ -20,8 +20,10 @@
     <Window.DataContext>
         <vm:MainVM/>
     </Window.DataContext>
-    <Grid>
 
+    <Grid>
+        <ContentControl Grid.ColumnSpan="999"
+        Grid.RowSpan="999" Content="{Binding LoginView}" Panel.ZIndex="3"/>
         <Border Grid.ColumnSpan="2" Grid.RowSpan="2" Background="#EBF1F4" CornerRadius="15"/>
         
         <Grid>
@@ -68,10 +70,9 @@
                     <ColumnDefinition Width="1.5*"/>
                 </Grid.ColumnDefinitions>
                 <!-- Test Button -->
-                <Button Content="Login" Command="{Binding LoginCommand}"/>
-                <Button Grid.Column="1" Content="Home" Command="{Binding HomeCommand}"/>
-                <Button Grid.Column="2" Content="Wiadomości"/>
-                <Button Grid.Column="3" Content="Grupy"/>
+                <Button Grid.Column="0" Content="Home" Command="{Binding HomeCommand}"/>
+                <Button Grid.Column="1" Content="Użytkownicy"/>
+                <Button Grid.Column="2" Content="Wyloguj" Command="{Binding LoginCommand}"/>
 
                 <Grid Margin="0 0 15 0" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Right">
                     <Grid.ColumnDefinitions>
