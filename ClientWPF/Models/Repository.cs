@@ -1,12 +1,9 @@
 ﻿using ClientWPF.Models.Interfaces;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-
 namespace ClientWPF.Models
 {
-    internal class Repository : IUserRepository
+    internal class Repository : IUserRepository, IMessageRepository
     {
         private IEnumerable<User> users;
         public IEnumerable<User> Users { 
@@ -28,10 +25,35 @@ namespace ClientWPF.Models
                 users = value;
             }
         }
+        private IEnumerable<Message> messages;
+        public IEnumerable<Message> Messages
+        {
+            get
+            {
+                if (messages?.Count() > 0)
+                    return messages;
 
+                messages = new List<Message>
+                {
+                    new Message("UserTest","UserTest1", "wiadomosc1"),
+                    new Message("UserTest1","UserTest2", "wiadomosc2"),
+                    new Message("UserTest2","UserTest1", "wiadomosc3")
+                };
+                return messages;
+            }
+            set
+            {
+                messages = value;
+            }
+        }
         //public event PropertyChangedEventHandler PropertyChanged;
 
         public User GetSelectedUser() => Users.Where(_ => _.IsSelected).First();
+
+        // TODO: LOGGED USER SELECTION
+        // IMplement logged user 
+
+        public User GetLoggedUser() => Users.First();
 
 
         public IEnumerable<User> GetUsers() => Users;
@@ -46,6 +68,8 @@ namespace ClientWPF.Models
             }
             
         }
+
+        public IEnumerable<Message> GetMessages() => messages;
 
         //protected void OnPropertyChanged([CallerMemberName] string name = null)
         //{

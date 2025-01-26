@@ -22,6 +22,7 @@ namespace ClientWPF.ViewModels
         public ICommand  MinimalizeCommand { get; set; }
 
         public UsersSideBarVM UsersSideBarVM { get; set; }
+        public LoginVM LoginView { get; set; }
 
         public void Home(object obj) => CurrentView = new HomeVM();
         public void Login(object obj) => CurrentView = new LoginVM();
@@ -46,10 +47,18 @@ namespace ClientWPF.ViewModels
             UserRepository = new Repository();
             SelectedUser = UserRepository.GetSelectedUser();
 
+            LoginView = new LoginVM();
+            LoginView.PropertyChanged += LoginView_PropertyChanged; ;
+
             UsersSideBarVM = new UsersSideBarVM();
             UsersSideBarVM.PropertyChanged += OnUsersSideBarChanged;
 
             CurrentView = new HomeVM();
+        }
+
+        private void LoginView_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            
         }
 
         public void OnUsersSideBarChanged(object sender, PropertyChangedEventArgs e)

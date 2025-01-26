@@ -20,8 +20,6 @@ namespace ClientWPF.Models.Controlers
             int bytesReceived = Client.Receive(buff);
 
             string data = Encoding.UTF8.GetString(buff, 0, bytesReceived);
-
-
             string[] splitted = data.Split(':');
 
             return new Message(splitted[1], splitted[2], splitted[3]);
