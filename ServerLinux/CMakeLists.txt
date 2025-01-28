@@ -1,4 +1,4 @@
-﻿# CMakeList.txt: projekt CMake dla elementu ServerLinux, dołącz źródło i zdefiniuj
+# CMakeList.txt: projekt CMake dla elementu ServerLinux, dołącz źródło i zdefiniuj
 # tutaj logikę specyficzną dla projektu.
 #
 cmake_minimum_required (VERSION 3.8)
@@ -17,5 +17,7 @@ add_executable (ServerLinux "ServerLinux.cpp" "ServerLinux.h")
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET ServerLinux PROPERTY CXX_STANDARD 20)
 endif()
+
+target_link_libraries(ServerLinux sqlite3)
 
 # TODO: Dodaj testy i zainstaluj elementy docelowe w razie potrzeby.
