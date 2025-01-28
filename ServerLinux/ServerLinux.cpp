@@ -1,6 +1,6 @@
-﻿#include <iostream>
 #include <thread>
 #include <mutex>
+#include <iostream>
 #include <vector>
 #include <map>
 #include <cstring>
@@ -12,17 +12,26 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <sqlite3.h>
 
 #define PORT 8080
 #define BUFFER_SIZE 1024
 
 std::vector<class Client*> clients;
-std::vector<std::string> messages;
 std::mutex clients_mutex;
+sqlite3* db; // Globalna baza danych
 
 #pragma region HelpFunctions
 int numberOfCharsInArray(const std::string& str) {
     return str.length();
+}
+
+static int callback(void* NotUsed, int argc, char** argv, char** azColName) {
+    for (int i = 0; i < argc; i++) {
+        std::cout << (argv[i] ? argv[i] : "NULL") << "\t";
+    }
+    std::cout << std::endl;
+    return 0;
 }
 
 std::vector<std::string> split_string(const std::string& str, char delim = ':') {
@@ -67,26 +76,62 @@ public:
     }
 };
 
+void initializeDatabase() {
+    const char* createTableSQL = "CREATE TABLE IF NOT EXISTS komunikacja ("
+        "wiadomosc TEXT NOT NULL"
+        ");";
+
+    char* errMessage = nullptr;
+    int rc = sqlite3_exec(db, createTableSQL, nullptr, 0, &errMessage);
+    if (rc != SQLITE_OK) {
+        std::cerr << "SQL error: " << errMessage << std::endl;
+        sqlite3_free(errMessage);
+    }
+    else {
+        std::cout << "Table initialized successfully!\n";
+    }
+}
+
+void saveMessageToDatabase(const std::string& sender, const std::string& receiver, const std::string& message) {
+    char* errMessage = nullptr;
+    std::string finalMessage = "1:" + sender + ":" + receiver + ":" + message;
+
+    std::string sql = "INSERT INTO komunikacja (wiadomosc) VALUES ('"+ finalMessage +"');";
+
+    int rc = sqlite3_exec(db, sql.c_str(), nullptr, 0, &errMessage);
+    if (rc != SQLITE_OK) {
+        std::cerr << "Failed to insert message: " << errMessage << std::endl;
+        sqlite3_free(errMessage);
+    }
+    else {
+        std::cout << "Message saved to database.\n";
+    }
+}
+
 void sendMessage(const std::string& message) {
-    
     std::vector<std::string> splitted = split_string(message, ':');
+    if (splitted.size() < 3) {
+        std::cerr << "Invalid message format: " << message << std::endl;
+        return;
+    }
+
+    std::string sender = splitted[1];
+    std::string receiver = splitted[2];
+    std::string msgContent = splitted[3];
+
 
     std::lock_guard<std::mutex> lock(clients_mutex);
-    for (size_t i = 0; i < clients.size(); i++) {
-        Client* client = clients[i];
-        if (splitted[2] == client->username) {
-            if (client->isOnline)
-            {
+    for (Client* client : clients) {
+        if (receiver == client->username) {
+            if (client->isOnline) {
                 write(client->cfd, message.c_str(), message.size());
-                printf("Message sended to user %s", client->username.c_str());
+                printf("Message sent to user %s\n", client->username.c_str());
+                return;
             }
-            else
-            {
-                messages.push_back(message);
-            }
-            return;
         }
     }
+    saveMessageToDatabase(sender, receiver, msgContent);
+    return;
 }
 
 void handle_client(void* arg) {
@@ -94,10 +139,9 @@ void handle_client(void* arg) {
 
     Client* c = (Client*)arg;
 
-    printf("client %s connected \n", inet_ntoa((struct in_addr)c->caddr.sin_addr));
+    printf("Client %s connected\n", inet_ntoa((struct in_addr)c->caddr.sin_addr));
 
-    printf("Hello %s \n", c->username.c_str());
-
+    printf("Hello %s\n", c->username.c_str());
 
     while (true) {
         buffer.clear();
@@ -114,33 +158,28 @@ void handle_client(void* arg) {
             std::string packetId = split_string(buffer, ':')[0];
             Packet* p = new Packet(std::stoi(packetId), buffer);
             sendMessage(p->packetBuffer);
-            printf("%s sended: %s", c->username.c_str(), p->packetBuffer.c_str());
+            printf("%s sent: %s\n", c->username.c_str(), p->packetBuffer.c_str());
             delete p;
         }
     }
 
     std::lock_guard<std::mutex> lock(clients_mutex);
-    {
-        for (size_t i = 0; i < clients.size(); i++) {
-            Client* client = clients[i];
-            if (client->cfd == c->cfd) {
-                clients.erase(clients.begin() + i);
-                delete client;
-                break;
-            }
+    for (size_t i = 0; i < clients.size(); i++) {
+        Client* client = clients[i];
+        if (client->cfd == c->cfd) {
+            clients.erase(clients.begin() + i);
+            delete client;
+            break;
         }
     }
 }
 
-void Connect(int clientSocket, sockaddr_in clientAddress, std::string username)
-{
+void Connect(int clientSocket, sockaddr_in clientAddress, std::string username) {
     std::lock_guard<std::mutex> lock(clients_mutex);
-    for (int i = 0; i < clients.size(); i++)
-    {
-        if (clients[i]->username == username)
-        {
-            clients[i]->isOnline = true;
-            std::thread(handle_client, clients[i]).detach();
+    for (Client* client : clients) {
+        if (client->username == username) {
+            client->isOnline = true;
+            std::thread(handle_client, client).detach();
             return;
         }
     }
@@ -149,18 +188,51 @@ void Connect(int clientSocket, sockaddr_in clientAddress, std::string username)
     clients.push_back(c);
     std::thread(handle_client, c).detach();
 }
+
 int main() {
-    char tempBuffer[255];
-    int server_socket, client_socket, on = 1;
+    int server_socket, client_socket;
     struct sockaddr_in server_address, client_address;
     socklen_t client_address_len = sizeof(client_address);
+    char tempBuffer[255];
+
+    sqlite3_stmt* stmt;
+    const char* sql = "SELECT name FROM sqlite_master WHERE type='table';";  // Zapytanie SQL
+
+    int rc = sqlite3_open("SK2.db", &db);
+    if (rc) {
+        std::cerr << "Can't open database: " << sqlite3_errmsg(db) << std::endl;
+        return 0;
+    }
+    else {
+        std::cout << "Opened database successfully!\n";
+    }
+
+    initializeDatabase();
+
+    // Przygotowanie zapytania
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, 0) != SQLITE_OK) {
+        std::cerr << "Błąd przy przygotowaniu zapytania: " << sqlite3_errmsg(db) << std::endl;
+        sqlite3_close(db);
+        return 1;
+    }
+
+    // Wykonanie zapytania i wypisanie wyników
+    std::cout << "Tabele w bazie danych:\n";
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        const unsigned char* table_name = sqlite3_column_text(stmt, 0);
+        std::cout << table_name << std::endl;
+    }
+
+
 
     server_socket = socket(AF_INET, SOCK_STREAM, 0);
-    setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, (char*)&on, sizeof(on));
     if (server_socket == -1) {
         printf("Failed to create socket.\n");
         return -1;
     }
+
+    int on = 1;
+    setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, (char*)&on, sizeof(on));
 
     server_address.sin_family = AF_INET;
     server_address.sin_addr.s_addr = INADDR_ANY;
@@ -178,11 +250,10 @@ int main() {
         return -1;
     }
 
-    printf("Server is running on port %d \n", PORT);
+    printf("Server is running on port %d\n", PORT);
 
     while (true) {
-        sockaddr_in client_addr;
-        client_socket = accept(server_socket, (struct sockaddr*)&client_addr, &client_address_len);
+        client_socket = accept(server_socket, (struct sockaddr*)&client_address, &client_address_len);
         if (client_socket == -1) {
             printf("Failed to accept client connection.\n");
             continue;
@@ -193,9 +264,11 @@ int main() {
         std::string tmpBuff = tempBuffer;
         tmpBuff.erase(std::remove(tmpBuff.begin(), tmpBuff.end(), '\n'), tmpBuff.cend());
 
-        Connect(client_socket,client_addr,tmpBuff);
+        Connect(client_socket, client_address, tmpBuff);
     }
 
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
     close(server_socket);
     return 0;
 }
