@@ -5,25 +5,35 @@ using System.Linq;
 
 namespace ClientWPF.ViewModels
 {
-    internal class MessagesVM
+    internal class MessagesVM :ViewModelBase
     {
-        public string loggedUsername;
-        public string selectedUsername;
+        private ObservableCollection<Message> _messages;
 
+        public ObservableCollection<Message> Messages { get => _messages; set { _messages = value; OnPropertyChanged(); } }
 
-        public ObservableCollection<Message> Messages { get; set; }
-
-        public MessagesVM(string loggedUsername, string selectedUsername)
+        public MessagesVM()
         {
             Messages = new ObservableCollection<Message>();
-            this.loggedUsername = loggedUsername;
-            this.selectedUsername = selectedUsername;
             UpdateMessages();
         }
+
         public void UpdateMessages()
         {
-            var ci = MainVM.Repository.Messages;
-            Messages = new ObservableCollection<Message>(MainVM.Repository.Messages.Where(_ => (_.UserFrom == selectedUsername && _.UserTo == loggedUsername) || (_.UserFrom == loggedUsername && _.UserTo == selectedUsername)));
+            var selectedUser = MainVM.Repository.GetSelectedUser();
+            var loggedUser = MainVM.Repository.GetLoggedUser();
+
+            // Czyść starą listę
+            Messages.Clear();
+
+            // Dodaj nowe wiadomości do kolekcji
+            var filteredMessages = MainVM.Repository.Messages
+                .Where(_ => (_.UserFrom == selectedUser?.Name && _.UserTo == loggedUser?.Name) ||
+                            (_.UserFrom == loggedUser?.Name && _.UserTo == selectedUser?.Name));
+
+            foreach (var message in filteredMessages)
+            {
+                Messages.Add(message);
+            }
         }
     }
 }

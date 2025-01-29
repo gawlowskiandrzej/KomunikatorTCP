@@ -13,15 +13,17 @@ namespace ClientWPF.ViewModels
         public static Repository Repository { get; set; }
 
         private object currentView;
+        private UsersSideBarVM _usersSideBarVM;
 
         public User SelectedUser { get; set; }
+        
 
         public ICommand  HomeCommand { get; set; }
         public ICommand  LoginCommand { get; set; }
         public ICommand  ExitCommand { get; set; }
         public ICommand  MinimalizeCommand { get; set; }
 
-        public UsersSideBarVM UsersSideBarVM { get; set; }
+        public UsersSideBarVM UsersSideBarVM { get => _usersSideBarVM; set { _usersSideBarVM = value; OnPropertyChanged(); } }
         public LoginVM LoginView { get; set; }
 
         public void Home(object obj) => CurrentView = new HomeVM();
@@ -45,24 +47,20 @@ namespace ClientWPF.ViewModels
             ExitCommand = new RelayCommand(Exit);
             MinimalizeCommand = new RelayCommand(Minimalize);
             Repository = new Repository();
-            SelectedUser = Repository.GetSelectedUser();
-
             LoginView = new LoginVM();
-            LoginView.User.PropertyChanged += LoginView_PropertyChanged1;
-
-            UsersSideBarVM = new UsersSideBarVM();
-            UsersSideBarVM.PropertyChanged += OnUsersSideBarChanged;
-
-            (CurrentView as HomeVM)?.StopMessageListening();
-            CurrentView = new HomeVM();
+            LoginView.PropertyChanged += LoginView_PropertyChanged1;
         }
 
         private void LoginView_PropertyChanged1(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(LoginView.User.IsConnected))
+            if (e.PropertyName == nameof(LoginView.IsInitialized))
             {
                 // Update CurrentView based on the new SelectedUser
-                (CurrentView as HomeVM).LoggedUser = LoginView.User;
+                UsersSideBarVM = new UsersSideBarVM();
+                UsersSideBarVM.PropertyChanged += OnUsersSideBarChanged;
+
+                CurrentView = new HomeVM();
+
                 (CurrentView as HomeVM).StartMessageListening();
             }
         }
@@ -72,9 +70,9 @@ namespace ClientWPF.ViewModels
             if (e.PropertyName == nameof(UsersSideBarVM.SelectedUser))
             {
                 // Update CurrentView based on the new SelectedUser
-                (CurrentView as HomeVM)?.StopMessageListening();
-                CurrentView = new HomeVM(UsersSideBarVM.SelectedUser, LoginView.User);
-                (CurrentView as HomeVM).StartMessageListening();
+                MainVM.Repository.SetSelection(UsersSideBarVM.SelectedUser);
+                MainVM.Repository.SetLoggedUser(LoginView.User);
+                (CurrentView as HomeVM).ChangeSelection();
             }
         }
     }

@@ -11,6 +11,7 @@ namespace ClientWPF.ViewModels
     internal class LoginVM : ViewModelBase
     {
         public string userInput { get; set; }
+        public bool IsInitialized { get => _isInitialized; set { _isInitialized = value; OnPropertyChanged(); } }
         public User User { get; set; }
 
         //private bool _isConnected;
@@ -24,7 +25,7 @@ namespace ClientWPF.ViewModels
         //    } 
         //}
         private Visibility _viewVisibility;
-       
+        private bool _isInitialized;
 
         public Visibility ViewVisibility
         {
@@ -56,9 +57,12 @@ namespace ClientWPF.ViewModels
                 User.MessageControler = new MessageControler(User.ConnectControler.Client);
                 User.MessageControler.Send(User.Name);
                 if (User.ConnectControler.Client.Connected)
-                { 
+                {
                     User.IsConnected = true;
+                    MainVM.Repository.Users.Add(User);
+                    var users = MainVM.Repository.GetUsers();
                     ViewVisibility = Visibility.Collapsed;
+                    IsInitialized = true;
                     // Not working
                 }
 

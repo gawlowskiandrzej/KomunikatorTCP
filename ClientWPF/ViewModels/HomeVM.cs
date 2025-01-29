@@ -1,38 +1,38 @@
 ﻿using ClientWPF.Commands;
 using ClientWPF.Models;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System;
+using ClientWPF.Models.Controlers;
 
 namespace ClientWPF.ViewModels
 {
-    internal class HomeVM
+    internal class HomeVM : ViewModelBase
     {
         public string MessageText { get; set; } 
-        public User LoggedUser { get; set; }
         public User SelectedUser { get; set; }
         CancellationTokenSource _cancellationTokenSource;
         public ICommand SendMessgeCommand { get; set; }
         public ICommand SendCommand { get; set; }
         public MessagesVM MessagesVM { get; set; }
 
-        public HomeVM(User selectedUser, User loggedUser):base()
-        {
-            SelectedUser = selectedUser;
-            LoggedUser = loggedUser;
-            MessagesVM = new MessagesVM(LoggedUser?.Name, SelectedUser?.Name);
-            InitCommands();
-        }
         public HomeVM()
         {
             if (SelectedUser == null)
                 SelectedUser = MainVM.Repository.GetSelectedUser();
-            MessagesVM = new MessagesVM(LoggedUser?.Name, SelectedUser?.Name);
+            MessagesVM = new MessagesVM();
             InitCommands();
+        }
+        public void ChangeSelection()
+        {
+            SelectedUser = MainVM.Repository.GetSelectedUser();
+            MessagesVM = new MessagesVM();
+            InitCommands();
+            OnPropertyChanged(nameof(SelectedUser));
+            OnPropertyChanged(nameof(MessagesVM));
+            OnPropertyChanged(nameof(MessageText));
         }
         void InitCommands()
         {
@@ -50,14 +50,14 @@ namespace ClientWPF.ViewModels
                 {
                     try
                     {
-                        var message = LoggedUser.MessageControler.Receive();
+                        var user = MainVM.Repository.GetLoggedUser();
+                        var message = user.MessageControler.Receive();
                         if (message != null)
                         {
                             Application.Current.Dispatcher.Invoke(() =>
                             {
                                 MainVM.Repository.Messages.Add(message);
-                                // Messege to logged user
-                                MessagesVM.UpdateMessages();  
+                                MessagesVM.UpdateMessages();
                             });
                         }
 
@@ -89,10 +89,11 @@ namespace ClientWPF.ViewModels
         }
         public void SendMessage(object obj) 
         {
-            string message = $"{1}:{LoggedUser.Name}:{SelectedUser.Name}:{MessageText}";
-            if (LoggedUser.MessageControler.Send(message))
+            var loggedUser = MainVM.Repository.GetLoggedUser();
+            string message = $"{1}:{loggedUser.Name}:{SelectedUser.Name}:{MessageText}";
+            if (loggedUser.MessageControler.Send(message))
             {
-                Message mess = new Message(LoggedUser.Name, SelectedUser.Name, MessageText);
+                Message mess = new Message(loggedUser.Name, SelectedUser.Name, MessageText);
                 MainVM.Repository.Messages.Add(mess);
                 MessagesVM.UpdateMessages();
             }

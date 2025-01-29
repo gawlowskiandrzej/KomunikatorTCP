@@ -11,7 +11,7 @@ namespace ClientWPF.Models
 
         public MessageControler MessageControler { get; set; }
         public ConnectControler ConnectControler { get; set; }
-        public bool IsConnected { get => _isConnected; set { _isConnected = value; OnPropertyChanged(); } }
+        public bool IsConnected { get => _isConnected; set => _isConnected = value; }
         public bool IsSelected 
         { 
             get => _isSelected;

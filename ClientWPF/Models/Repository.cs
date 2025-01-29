@@ -6,19 +6,14 @@ namespace ClientWPF.Models
 {
     internal class Repository : IUserRepository, IMessageRepository
     {
-        private IEnumerable<User> users;
-        public IEnumerable<User> Users { 
+        private List<User> users;
+        public List<User> Users { 
             get 
             {
                 if (users?.Count() > 0)
                     return users;
 
-                users = new List<User>
-                {
-                    new User("UserTest"){IsSelected = true},
-                    new User("UserTest1"),
-                    new User("UserTest2")
-                };
+                users = new List<User>();
                 return users;
             } 
             set 
@@ -55,9 +50,39 @@ namespace ClientWPF.Models
         // IMplement logged user 
 
         public User GetLoggedUser() => Users.Where(_ => _.IsConnected).FirstOrDefault();
+        public void SetLoggedUser(User User)
+        {
+            for (int i = 0; i < Users.Count(); i++)
+            {
+                Users[i].IsConnected = false;
+                if (Users[i].Name == User.Name)
+                {
+                    User.IsConnected = true;
+                    Users[i] = User;
+                }
+            }
+        }
 
+        public IEnumerable<User> GetUsers()
+        {
+            var loggedUser = GetLoggedUser();
 
-        public IEnumerable<User> GetUsers() => Users;
+            foreach (var message in this.Messages)
+            {
+                if (message.UserFrom !=loggedUser.Name  && !Users.Any(u => u?.Name == message.UserFrom))
+                {
+                    Users.Add(new User(message.UserFrom));
+                }
+
+                if (message.UserTo != loggedUser.Name && !Users.Any(u => u?.Name == message.UserTo))
+                {
+                    // Add the user that received the message (if not already added)
+                    Users.Add(new User(message.UserTo));
+                }
+            }
+
+            return Users;
+        }
 
         public void SetSelection(User selectedUser)
         {
