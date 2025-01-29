@@ -1,5 +1,6 @@
 ﻿using ClientWPF.Models.Interfaces;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 namespace ClientWPF.Models
 {
@@ -25,15 +26,15 @@ namespace ClientWPF.Models
                 users = value;
             }
         }
-        private IEnumerable<Message> messages;
-        public IEnumerable<Message> Messages
+        private ObservableCollection<Message> messages;
+        public ObservableCollection<Message> Messages
         {
             get
             {
                 if (messages?.Count() > 0)
                     return messages;
 
-                messages = new List<Message>
+                messages = new ObservableCollection<Message>
                 {
                     new Message("UserTest","UserTest1", "wiadomosc1"),
                     new Message("UserTest1","UserTest2", "wiadomosc2"),

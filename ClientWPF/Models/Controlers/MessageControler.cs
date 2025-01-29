@@ -2,6 +2,7 @@
 using System;
 using System.Net.Sockets;
 using System.Text;
+using System.Windows;
 
 namespace ClientWPF.Models.Controlers
 {
@@ -31,10 +32,20 @@ namespace ClientWPF.Models.Controlers
             throw new NotImplementedException();
         }
 
-        public void Send(string buffer = "1:UserTest:userDest:message")
+        public bool Send(string buffer = "1:UserTest:userDest:message")
         {
-            byte[] messageBytes = Encoding.UTF8.GetBytes(buffer);
-            var bytes = Client.Send(messageBytes);
+            try
+            {
+                byte[] messageBytes = Encoding.UTF8.GetBytes(buffer);
+                var bytes = Client.Send(messageBytes);
+                return true;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"There are an error: {e.Message}");
+                return false;
+            }
+            
         }
 
         public void Send(Message message)

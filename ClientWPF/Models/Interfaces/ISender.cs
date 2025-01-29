@@ -2,7 +2,7 @@
 {
     interface ISender
     {
-        void Send(string buffer);
+        bool Send(string buffer);
         void Send(Message message);
     }
 }

@@ -12,7 +12,9 @@ namespace ClientWPF.ViewModels
 {
     internal class HomeVM
     {
-        public User CurrentUser { get; set; }
+        public string MessageText { get; set; } 
+        public User LoggedUser { get; set; }
+        public User SelectedUser { get; set; }
         CancellationTokenSource _cancellationTokenSource;
         public ICommand SendMessgeCommand { get; set; }
         public ICommand SendCommand { get; set; }
@@ -20,16 +22,20 @@ namespace ClientWPF.ViewModels
 
         public HomeVM(User selectedUser):base()
         {
-            CurrentUser = selectedUser;
+            SelectedUser = selectedUser;
+            InitCommands();
         }
         public HomeVM()
         {
+            if (SelectedUser == null)
+                SelectedUser = MainVM.Repository.GetSelectedUser();
+            MessagesVM = new MessagesVM(LoggedUser.Name, SelectedUser.Name);
+            InitCommands();
+        }
+        void InitCommands()
+        {
             SendMessgeCommand = new RelayCommand(SendMessage);
-            SendCommand = new RelayCommand(SendMessage);
-            if (CurrentUser == null)
-                CurrentUser = MainVM.UserRepository.GetSelectedUser();
-            MessagesVM = new MessagesVM();
-
+            SendCommand = new RelayCommand(Send);
         }
         public void StartMessageListening()
         {
@@ -42,13 +48,14 @@ namespace ClientWPF.ViewModels
                 {
                     try
                     {
-                        var message = CurrentUser.MessageControler.Receive();
+                        var message = LoggedUser.MessageControler.Receive();
                         if (message != null)
                         {
                             Application.Current.Dispatcher.Invoke(() =>
                             {
-                                MessagesVM.Messages.Append(message);
-                                MessageBox.Show($"Nowa wiadomość otrzymana: {message.Content}");
+                                MainVM.Repository.Messages.Add(message);
+                                // Messege to logged user
+                                MessagesVM.UpdateMessages();  
                             });
                         }
 
@@ -69,8 +76,25 @@ namespace ClientWPF.ViewModels
                 }
             }, token);
         }
-
-        public void SendMessage(object obj) => CurrentUser.MessageControler.Send();
-        public void Send(object obj) => MessageBox.Show("Wysyłanie wiadomości");
+        public void StopMessageListening()
+        {
+            if (_cancellationTokenSource != null)
+            {
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+                _cancellationTokenSource = null;
+            }
+        }
+        public void SendMessage(object obj) 
+        {
+            string message = $"{1}:{LoggedUser.Name}:{SelectedUser.Name}:{MessageText}";
+            if (LoggedUser.MessageControler.Send(message))
+            {
+                Message mess = new Message(LoggedUser.Name, SelectedUser.Name, message);
+                MainVM.Repository.Messages.Add(mess);
+                MessagesVM.UpdateMessages();
+            }
+        }
+        public void Send(object obj) => MessagesVM.Messages.Add(new Message("test2", "test1", "lalal"));
     }
 }

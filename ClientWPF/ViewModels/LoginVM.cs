@@ -51,7 +51,6 @@ namespace ClientWPF.ViewModels
         {
             try
             {
-                ViewVisibility = Visibility.Collapsed;
                 User.Name = userInput;
                 User.ConnectControler = new ConnectControler();
                 User.MessageControler = new MessageControler(User.ConnectControler.Client);
@@ -59,6 +58,7 @@ namespace ClientWPF.ViewModels
                 if (User.ConnectControler.Client.Connected)
                 { 
                     User.IsConnected = true;
+                    ViewVisibility = Visibility.Collapsed;
                     // Not working
                 }
 

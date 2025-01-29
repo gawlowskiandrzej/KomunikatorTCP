@@ -11,18 +11,18 @@ namespace ClientWPF.ViewModels
         private IEnumerable<User> _users;
         public IEnumerable<User> Users 
         { 
-            get => MainVM.UserRepository?.GetUsers();
+            get => MainVM.Repository?.GetUsers();
             set { _users = value;  } 
         }
         private User _selectedUser;
 
         public User SelectedUser
         {
-            get => MainVM.UserRepository?.GetSelectedUser(); 
+            get => MainVM.Repository?.GetSelectedUser(); 
             set
             {
                 _selectedUser = value;
-                MainVM.UserRepository.SetSelection(value);
+                MainVM.Repository.SetSelection(value);
                 OnPropertyChanged();
             }
 
@@ -32,8 +32,8 @@ namespace ClientWPF.ViewModels
         public UsersSideBarVM()
         {
             SelectUserCommand = new RelayCommand(SelectUser);
-            Users = MainVM.UserRepository?.GetUsers();
-            SelectedUser = MainVM.UserRepository?.GetSelectedUser();
+            Users = MainVM.Repository?.GetUsers();
+            SelectedUser = MainVM.Repository?.GetSelectedUser();
         }
         public void SelectUser(object obj)
         {

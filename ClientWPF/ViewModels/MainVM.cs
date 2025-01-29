@@ -10,7 +10,7 @@ namespace ClientWPF.ViewModels
 {
     internal class MainVM : ViewModelBase
     {
-        public static IUserRepository UserRepository { get; set; }
+        public static Repository Repository { get; set; }
 
         private object currentView;
 
@@ -44,8 +44,8 @@ namespace ClientWPF.ViewModels
             LoginCommand = new RelayCommand(Login);
             ExitCommand = new RelayCommand(Exit);
             MinimalizeCommand = new RelayCommand(Minimalize);
-            UserRepository = new Repository();
-            SelectedUser = UserRepository.GetSelectedUser();
+            Repository = new Repository();
+            SelectedUser = Repository.GetSelectedUser();
 
             LoginView = new LoginVM();
             LoginView.User.PropertyChanged += LoginView_PropertyChanged1;
@@ -53,6 +53,7 @@ namespace ClientWPF.ViewModels
             UsersSideBarVM = new UsersSideBarVM();
             UsersSideBarVM.PropertyChanged += OnUsersSideBarChanged;
 
+            (CurrentView as HomeVM)?.StopMessageListening();
             CurrentView = new HomeVM();
         }
 
@@ -61,7 +62,7 @@ namespace ClientWPF.ViewModels
             if (e.PropertyName == nameof(LoginView.User.IsConnected))
             {
                 // Update CurrentView based on the new SelectedUser
-                (CurrentView as HomeVM).CurrentUser = LoginView.User;
+                (CurrentView as HomeVM).LoggedUser = LoginView.User;
                 (CurrentView as HomeVM).StartMessageListening();
             }
         }
@@ -71,7 +72,10 @@ namespace ClientWPF.ViewModels
             if (e.PropertyName == nameof(UsersSideBarVM.SelectedUser))
             {
                 // Update CurrentView based on the new SelectedUser
+                (CurrentView as HomeVM)?.StopMessageListening();
                 CurrentView = new HomeVM(UsersSideBarVM.SelectedUser);
+                (CurrentView as HomeVM).LoggedUser = LoginView.User;
+                (CurrentView as HomeVM).StartMessageListening();
             }
         }
     }
