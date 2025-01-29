@@ -174,21 +174,48 @@ void handle_client(void* arg) {
     }
 }
 
+void sendStoredMessages(Client* client) {
+    std::string sql = "SELECT wiadomosc FROM komunikacja WHERE wiadomosc LIKE '1:%:" + client->username + ":%';";
+    sqlite3_stmt* stmt;
+
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
+        std::cerr << "SQL error: " << sqlite3_errmsg(db) << std::endl;
+        return;
+    }
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        std::string message = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+        write(client->cfd, message.c_str(), message.size());
+    }
+
+    sqlite3_finalize(stmt);
+
+    sql = "DELETE FROM komunikacja WHERE wiadomosc LIKE '%:" + client->username + ":%';";
+    char* errMessage = nullptr;
+    if (sqlite3_exec(db, sql.c_str(), nullptr, 0, &errMessage) != SQLITE_OK) {
+        std::cerr << "Failed to delete messages: " << errMessage << std::endl;
+        sqlite3_free(errMessage);
+    }
+}
+
 void Connect(int clientSocket, sockaddr_in clientAddress, std::string username) {
     std::lock_guard<std::mutex> lock(clients_mutex);
     for (Client* client : clients) {
         if (client->username == username) {
             client->isOnline = true;
             std::thread(handle_client, client).detach();
+            sendStoredMessages(client);
             return;
         }
     }
+
     Client* c = new Client(clientSocket, clientAddress);
     c->username = username;
     clients.push_back(c);
+
+    sendStoredMessages(c);
     std::thread(handle_client, c).detach();
 }
-
 int main() {
     int server_socket, client_socket;
     struct sockaddr_in server_address, client_address;
