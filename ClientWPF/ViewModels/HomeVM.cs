@@ -20,16 +20,18 @@ namespace ClientWPF.ViewModels
         public ICommand SendCommand { get; set; }
         public MessagesVM MessagesVM { get; set; }
 
-        public HomeVM(User selectedUser):base()
+        public HomeVM(User selectedUser, User loggedUser):base()
         {
             SelectedUser = selectedUser;
+            LoggedUser = loggedUser;
+            MessagesVM = new MessagesVM(LoggedUser?.Name, SelectedUser?.Name);
             InitCommands();
         }
         public HomeVM()
         {
             if (SelectedUser == null)
                 SelectedUser = MainVM.Repository.GetSelectedUser();
-            MessagesVM = new MessagesVM(LoggedUser.Name, SelectedUser.Name);
+            MessagesVM = new MessagesVM(LoggedUser?.Name, SelectedUser?.Name);
             InitCommands();
         }
         void InitCommands()
@@ -90,7 +92,7 @@ namespace ClientWPF.ViewModels
             string message = $"{1}:{LoggedUser.Name}:{SelectedUser.Name}:{MessageText}";
             if (LoggedUser.MessageControler.Send(message))
             {
-                Message mess = new Message(LoggedUser.Name, SelectedUser.Name, message);
+                Message mess = new Message(LoggedUser.Name, SelectedUser.Name, MessageText);
                 MainVM.Repository.Messages.Add(mess);
                 MessagesVM.UpdateMessages();
             }

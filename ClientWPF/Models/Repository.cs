@@ -54,7 +54,7 @@ namespace ClientWPF.Models
         // TODO: LOGGED USER SELECTION
         // IMplement logged user 
 
-        public User GetLoggedUser() => Users.First();
+        public User GetLoggedUser() => Users.Where(_ => _.IsConnected).FirstOrDefault();
 
 
         public IEnumerable<User> GetUsers() => Users;

@@ -73,8 +73,7 @@ namespace ClientWPF.ViewModels
             {
                 // Update CurrentView based on the new SelectedUser
                 (CurrentView as HomeVM)?.StopMessageListening();
-                CurrentView = new HomeVM(UsersSideBarVM.SelectedUser);
-                (CurrentView as HomeVM).LoggedUser = LoginView.User;
+                CurrentView = new HomeVM(UsersSideBarVM.SelectedUser, LoginView.User);
                 (CurrentView as HomeVM).StartMessageListening();
             }
         }

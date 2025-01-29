@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClientWPF.ViewModels;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -7,10 +8,10 @@ namespace ClientWPF.Models
 {
     public class IndexToAlignmentConverter : IValueConverter
     {
-        Repository repo = new Repository();
+        
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value as string == repo.GetLoggedUser().Name as string)
+            if (value as string == MainVM.Repository.GetLoggedUser().Name)
             {
                 return HorizontalAlignment.Right;
             }
