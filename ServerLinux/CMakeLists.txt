@@ -11,6 +11,7 @@ endif()
 
 project ("ServerLinux")
 
+find_package(SQLite3 REQUIRED)
 # Dodaj źródło do pliku wykonywalnego tego projektu.
 add_executable (ServerLinux "ServerLinux.cpp" "ServerLinux.h")
 
