@@ -99,6 +99,7 @@ namespace ClientWPF.ViewModels
             UserVM = new UserVM();
             UserVM.PropertyChanged += UserVM_PropertyChanged;
             buttonVisibility = Visibility.Hidden;
+            
         }
 
         private void UserVM_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -108,6 +109,7 @@ namespace ClientWPF.ViewModels
                 // TODO: make added visual to usersidebar
                 UsersSideBarVM.Users = new System.Collections.ObjectModel.ObservableCollection<User>(Repository.Users);
                 buttonVisibility = Visibility.Visible;
+                UserVM = null;
             }
         }
     }

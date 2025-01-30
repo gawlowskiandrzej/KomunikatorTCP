@@ -39,6 +39,9 @@
             <ContentControl Grid.ColumnSpan="999"
             Grid.RowSpan="999" Content="{Binding LoginView}" Panel.ZIndex="1"/>
 
+            <ContentControl Grid.ColumnSpan="999"
+            Grid.RowSpan="999" Content="{Binding UserVM}" Panel.ZIndex="3"/>
+
             <TextBlock Margin="35 0 0 0" Panel.ZIndex="10"
                        VerticalAlignment="Center" 
                        Text="Halo-Halo"
