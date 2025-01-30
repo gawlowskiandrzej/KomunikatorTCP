@@ -43,13 +43,12 @@ namespace ClientWPF.Models
 
         public User GetSelectedUser() 
         {
-            var user = Users.Where(_ => _.IsSelected).FirstOrDefault();
-            if (user is null)
-            { 
-                user = Users.Last();
-                user.IsSelected = true;
+            var usr = Users.Where(_ => _.IsSelected).FirstOrDefault();
+            if (usr == null)
+            {
+                if (Users.Count > 0) return Users.First();
             }
-            return user;   
+            return usr;
         }
 
         // TODO: LOGGED USER SELECTION

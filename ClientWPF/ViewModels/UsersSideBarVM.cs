@@ -19,7 +19,7 @@ namespace ClientWPF.ViewModels
 
         public User SelectedUser
         {
-            get => MainVM.Repository?.GetSelectedUser(); 
+            get => _selectedUser; 
             set
             {
                 _selectedUser = value;
@@ -34,7 +34,7 @@ namespace ClientWPF.ViewModels
         {
             SelectUserCommand = new RelayCommand(SelectUser);
             Users = new ObservableCollection<User>(MainVM.Repository.Users);
-            Users[0].IsSelected = true;
+            //Users[0].IsSelected = true;
             SelectedUser = MainVM.Repository?.GetSelectedUser();
 
             OnPropertyChanged(nameof(SelectedUser));

@@ -58,7 +58,7 @@ namespace ClientWPF.ViewModels
             try
             {
                 User.Name = userInput;
-                User.ConnectControler = new ConnectControler();
+                User.ConnectControler = new ConnectControler(App.SERVER_IPADDRESS, App.SERVER_PORT);
                 User.MessageControler = new MessageControler(User.ConnectControler.Client);
                 User.MessageControler.Send(User.Name);
                 if (User.ConnectControler.Client.Connected)

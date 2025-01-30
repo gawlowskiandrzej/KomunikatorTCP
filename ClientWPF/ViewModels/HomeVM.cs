@@ -51,14 +51,11 @@ namespace ClientWPF.ViewModels
                     try
                     {
                         var message = user.MessageControler.Receive();
-                        if (_cancellationTokenSource is null) return;
-                        if (_cancellationTokenSource.IsCancellationRequested) { return; }
                         if (message != null)
                         {
                             if (message.UserFrom == "") { _cancellationTokenSource.Cancel(); return; } // Stop receive load packets
                             Application.Current.Dispatcher.Invoke(() =>
                             {
-                                
                                 MainVM.Repository.Messages.Add(message);
                                 MessagesVM.UpdateMessages();
                             });

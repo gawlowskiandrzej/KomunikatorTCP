@@ -43,6 +43,7 @@ namespace ClientWPF.ViewModels
             {
                 CurrentView = HomeVM;
             }
+            UserVM = null;
         }
         public void Exit(object obj) => Application.Current.Shutdown();
         public void Minimalize(object obj) => Application.Current.MainWindow.WindowState = WindowState.Minimized;
@@ -101,6 +102,7 @@ namespace ClientWPF.ViewModels
         }
         public void Logout(object obj)
         {
+            UserVM = null;
             MainVM.Repository.GetLoggedUser().Logout();
             (CurrentView as HomeVM)?.StopMessageListening();
             LoginView.ViewVisibility = Visibility.Visible;
@@ -110,7 +112,6 @@ namespace ClientWPF.ViewModels
         {
             UserVM = new UserVM();
             UserVM.PropertyChanged += UserVM_PropertyChanged;
-            buttonVisibility = Visibility.Hidden;
         }
 
         private void UserVM_PropertyChanged(object sender, PropertyChangedEventArgs e)
