@@ -15,6 +15,7 @@ namespace ClientWPF.ViewModels
         public string userInput { get; set; }
         public bool IsInitialized { get => _isInitialized; set { _isInitialized = value; OnPropertyChanged(); } }
         CancellationTokenSource _cancellationTokenSource;
+        public LoadingVM LoadingView { get; set; }
         public User User { get; set; }
 
         //private bool _isConnected;
@@ -42,6 +43,7 @@ namespace ClientWPF.ViewModels
         public ICommand LoginCommand { get; set; }
         public LoginVM()
         {
+            LoadingView = new LoadingVM();
             ViewVisibility = Visibility.Visible;
             User = new User();
             LoginCommand = new RelayCommand(LoginUser);
@@ -61,11 +63,13 @@ namespace ClientWPF.ViewModels
                 User.MessageControler.Send(User.Name);
                 if (User.ConnectControler.Client.Connected)
                 {
+                    LoadingView.StartAnimation();
                     MainVM.Repository.SetLoggedUser(User);
                     // TODO: Loading screen
                     await LoadMessageHistory();
                     var users = MainVM.Repository.GetUsers();
                     IsInitialized = true;
+                    LoadingView.StopAnimation();
                 }
 
             }

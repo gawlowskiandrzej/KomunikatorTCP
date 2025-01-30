@@ -36,13 +36,13 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <ContentControl Grid.ColumnSpan="999"
-            Grid.RowSpan="999" Content="{Binding LoginView}" Panel.ZIndex="1"/>
+            <ContentControl Visibility="Collapsed" Grid.ColumnSpan="999"
+            Grid.RowSpan="999" Content="{Binding LoginView}" Panel.ZIndex="3"/>
 
             <ContentControl Grid.ColumnSpan="999"
             Grid.RowSpan="999" Content="{Binding UserVM}" Panel.ZIndex="3"/>
 
-            <TextBlock Margin="35 0 0 0" Panel.ZIndex="10"
+            <TextBlock Margin="35 0 0 0" Panel.ZIndex="3"
                        VerticalAlignment="Center" 
                        Text="Halo-Halo"
                        FontWeight="Bold"
@@ -60,7 +60,7 @@
             <Grid Grid.Column="0" Grid.Row="1">
                 <ContentControl Content="{Binding UsersSideBarVM}"/>
             </Grid>
-            <Grid Margin="30 0 0 0" Grid.Row="0" Grid.Column="1" Panel.ZIndex="5">
+            <Grid Margin="30 0 0 0" Grid.Row="0" Grid.Column="1" Panel.ZIndex="3">
                 <Grid.Resources>
                     <Style TargetType="Button" BasedOn="{StaticResource SidebarButt}"/>
                 </Grid.Resources>

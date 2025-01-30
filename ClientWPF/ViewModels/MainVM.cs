@@ -1,6 +1,7 @@
 ﻿using ClientWPF.Commands;
 using ClientWPF.Models;
 using ClientWPF.Models.Interfaces;
+using ClientWPF.Views;
 using System;
 using System.ComponentModel;
 using System.Threading;
@@ -53,6 +54,7 @@ namespace ClientWPF.ViewModels
                 OnPropertyChanged();
             }
         }
+        // Punkt startowy
         public MainVM()
         {
             HomeCommand = new RelayCommand(Home);
@@ -63,6 +65,7 @@ namespace ClientWPF.ViewModels
             LoginView = new LoginVM();
             LoginView.PropertyChanged += LoginView_PropertyChanged1;
             buttonVisibility = Visibility.Hidden;
+            CurrentView = new HomeVM();
         }
         private void Init()
         {
@@ -80,7 +83,6 @@ namespace ClientWPF.ViewModels
         {
             if (e.PropertyName == nameof(LoginView.IsInitialized))
             {
-                MessageBox.Show("Messages received!");
                 Init();
                 (CurrentView as HomeVM).StartMessageListening();
             }

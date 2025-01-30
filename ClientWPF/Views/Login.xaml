@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClientWPF.Views"
              xmlns:vm="clr-namespace:ClientWPF.ViewModels"
+             xmlns:view="clr-namespace:ClientWPF.Views"
              mc:Ignorable="d" 
              Style="{StaticResource DefaultPage}"
              Visibility="{Binding ViewVisibility}"
@@ -14,10 +15,11 @@
             <RowDefinition Height="0.1*"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid Grid.ColumnSpan="3" Panel.ZIndex="-1">
+        
+        <Grid Grid.ColumnSpan="3" Panel.ZIndex="1">
             <Border Grid.ColumnSpan="2" Background="{StaticResource Pallete2}" CornerRadius="15 15 0 0"/>
         </Grid>
-        <Grid Grid.ColumnSpan="3" Grid.Row="1" Grid.RowSpan="3" Panel.ZIndex="-1">
+        <Grid Grid.ColumnSpan="3" Grid.Row="1" Grid.RowSpan="3" Panel.ZIndex="0">
             <Border Grid.ColumnSpan="2" Background="{StaticResource BackGround}" CornerRadius="0 0 15 15"/>
         </Grid>
         <Grid Grid.Row="1" Background="Transparent">
@@ -35,5 +37,7 @@
         <TextBox Text="{Binding userInput}" VerticalContentAlignment="Center" Grid.Row="1" Grid.Column="1" Height="30"/>
             <Button Style="{StaticResource BasicButt}" Command="{Binding LoginCommand}" Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" Width="150" Height="30" Content="Zaloguj"/>
         </Grid>
+        <ContentControl Opacity="1" Grid.ColumnSpan="999"
+    Grid.RowSpan="999" Panel.ZIndex="1" Content="{Binding LoadingView}" />
     </Grid>
 </UserControl>

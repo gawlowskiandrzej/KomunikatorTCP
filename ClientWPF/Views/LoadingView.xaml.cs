@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace ClientWPF.Views
 {
     /// <summary>
-    /// Logika interakcji dla klasy CurrentMessages.xaml
+    /// Logika interakcji dla klasy LoadingView.xaml
     /// </summary>
-    public partial class CurrentMessages : UserControl
+    public partial class LoadingView : UserControl
     {
-        public CurrentMessages()
+        public LoadingView()
         {
             InitializeComponent();
         }
