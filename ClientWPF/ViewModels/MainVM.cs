@@ -1,7 +1,10 @@
 ﻿using ClientWPF.Commands;
 using ClientWPF.Models;
 using ClientWPF.Models.Interfaces;
+using System;
 using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using System.Windows;
 using System.Windows.Input;
@@ -61,23 +64,27 @@ namespace ClientWPF.ViewModels
             LoginView.PropertyChanged += LoginView_PropertyChanged1;
             buttonVisibility = Visibility.Hidden;
         }
+        private void Init()
+        {
+            // Update CurrentView based on the new SelectedUser
+            UsersSideBarVM = new UsersSideBarVM();
+            UsersSideBarVM.PropertyChanged += OnUsersSideBarChanged;
 
+            HomeVM = new HomeVM();
+            CurrentView = HomeVM;
+
+            buttonVisibility = Visibility.Visible;
+            LoginView.ViewVisibility = Visibility.Collapsed;
+        }
         private void LoginView_PropertyChanged1(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(LoginView.IsInitialized))
             {
-                // Update CurrentView based on the new SelectedUser
-                UsersSideBarVM = new UsersSideBarVM();
-                UsersSideBarVM.PropertyChanged += OnUsersSideBarChanged;
-
-                HomeVM = new HomeVM();
-                CurrentView = HomeVM;
-
+                MessageBox.Show("Messages received!");
+                Init();
                 (CurrentView as HomeVM).StartMessageListening();
-                buttonVisibility = Visibility.Visible;
             }
         }
-
         public void OnUsersSideBarChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(UsersSideBarVM.SelectedUser))
@@ -99,7 +106,6 @@ namespace ClientWPF.ViewModels
             UserVM = new UserVM();
             UserVM.PropertyChanged += UserVM_PropertyChanged;
             buttonVisibility = Visibility.Hidden;
-            
         }
 
         private void UserVM_PropertyChanged(object sender, PropertyChangedEventArgs e)

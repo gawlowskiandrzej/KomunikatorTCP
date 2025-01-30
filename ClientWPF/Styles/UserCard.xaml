@@ -24,7 +24,7 @@
                                                       Opacity="0.7"
                               Height="20"
                               Kind="User" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                            <Border HorizontalAlignment="Right" Height="10" Width="10" CornerRadius="10" Margin="0 0 3 1" VerticalAlignment="Bottom" Style="{DynamicResource Status}"/>
+                            <!--<Border HorizontalAlignment="Right" Height="10" Width="10" CornerRadius="10" Margin="0 0 3 1" VerticalAlignment="Bottom" Style="{DynamicResource Status}"/>-->
                         </Grid>
                         <Border x:Name="border" Grid.ColumnSpan="2" CornerRadius="20" Style="{DynamicResource SelectedUserBorder}"/>
                         <Grid Grid.Column="1">

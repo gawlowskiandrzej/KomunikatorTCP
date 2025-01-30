@@ -3,6 +3,8 @@ using ClientWPF.Models;
 using ClientWPF.Models.Controlers;
 using System;
 using System.ComponentModel.Design;
+using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 
@@ -12,6 +14,7 @@ namespace ClientWPF.ViewModels
     {
         public string userInput { get; set; }
         public bool IsInitialized { get => _isInitialized; set { _isInitialized = value; OnPropertyChanged(); } }
+        CancellationTokenSource _cancellationTokenSource;
         public User User { get; set; }
 
         //private bool _isConnected;
@@ -48,7 +51,7 @@ namespace ClientWPF.ViewModels
             // Przełączanie widoczności
             ViewVisibility = ViewVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
         }
-        public void LoginUser(object obj)
+        public async void LoginUser(object obj)
         {
             try
             {
@@ -58,12 +61,11 @@ namespace ClientWPF.ViewModels
                 User.MessageControler.Send(User.Name);
                 if (User.ConnectControler.Client.Connected)
                 {
-                    User.IsConnected = true;
-                    MainVM.Repository.Users.Add(User);
+                    MainVM.Repository.SetLoggedUser(User);
+                    // TODO: Loading screen
+                    await LoadMessageHistory();
                     var users = MainVM.Repository.GetUsers();
-                    ViewVisibility = Visibility.Collapsed;
                     IsInitialized = true;
-                    // Not working
                 }
 
             }
@@ -72,6 +74,45 @@ namespace ClientWPF.ViewModels
                 MessageBox.Show($"Connect error: {e.Message}");
             }
             
+        }
+        public Task LoadMessageHistory()
+        {
+            _cancellationTokenSource = new CancellationTokenSource();
+            var token = _cancellationTokenSource.Token;
+
+            return Task.Run(async () =>
+            {
+                var user = MainVM.Repository.GetLoggedUser();
+                while (!token.IsCancellationRequested)
+                {
+                    try
+                    {
+                        var message = user.MessageControler.Receive();
+                        if (message != null)
+                        {
+                            if (message.UserFrom == "") { _cancellationTokenSource.Cancel(); return; } // Stop receive load packets
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                MainVM.Repository.Messages.Add(message);
+                            });
+                        }
+
+                        // Opcjonalnie: dodaj opóźnienie, aby zmniejszyć obciążenie procesora
+                        await Task.Delay(10, token);
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            MessageBox.Show($"Błąd podczas odbierania wiadomości: {ex.Message}");
+                        });
+                    }
+                }
+            }, token);
         }
     }
 }

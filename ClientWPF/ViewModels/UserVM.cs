@@ -17,6 +17,7 @@ namespace ClientWPF.ViewModels
         public void AddUserAction(object obj)
         {
             MainVM.Repository.Users.Add(new Models.User(Username));
+            //TODO: ADD USER, UPDATE Side bar.
         }
     }
 }

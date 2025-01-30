@@ -15,7 +15,6 @@ namespace ClientWPF.ViewModels
         public User SelectedUser { get; set; }
         CancellationTokenSource _cancellationTokenSource;
         public ICommand SendMessgeCommand { get; set; }
-        public ICommand SendCommand { get; set; }
         public MessagesVM MessagesVM { get; set; }
 
         public HomeVM()
@@ -37,23 +36,23 @@ namespace ClientWPF.ViewModels
         void InitCommands()
         {
             SendMessgeCommand = new RelayCommand(SendMessage);
-            SendCommand = new RelayCommand(Send);
         }
-        public void StartMessageListening()
+        public Task StartMessageListening()
         {
             _cancellationTokenSource = new CancellationTokenSource();
             var token = _cancellationTokenSource.Token;
 
-            Task.Run(() =>
+            return Task.Run(async () =>
             {
+                var user = MainVM.Repository.GetLoggedUser();
                 while (!token.IsCancellationRequested)
                 {
                     try
                     {
-                        var user = MainVM.Repository.GetLoggedUser();
                         var message = user.MessageControler.Receive();
                         if (message != null)
                         {
+                            if (message.UserFrom == "") { _cancellationTokenSource.Cancel(); return; } // Stop receive load packets
                             Application.Current.Dispatcher.Invoke(() =>
                             {
                                 MainVM.Repository.Messages.Add(message);
@@ -62,7 +61,7 @@ namespace ClientWPF.ViewModels
                         }
 
                         // Opcjonalnie: dodaj opóźnienie, aby zmniejszyć obciążenie procesora
-                        Task.Delay(500).Wait();
+                        await Task.Delay(10, token);
                     }
                     catch (TaskCanceledException)
                     {
@@ -90,7 +89,7 @@ namespace ClientWPF.ViewModels
         public void SendMessage(object obj) 
         {
             var loggedUser = MainVM.Repository.GetLoggedUser();
-            string message = $"{1}:{loggedUser.Name}:{SelectedUser.Name}:{MessageText}";
+            string message = $"1:{loggedUser.Name}:{SelectedUser.Name}:{MessageText}";
             if (loggedUser.MessageControler.Send(message))
             {
                 Message mess = new Message(loggedUser.Name, SelectedUser.Name, MessageText);
@@ -98,6 +97,5 @@ namespace ClientWPF.ViewModels
                 MessagesVM.UpdateMessages();
             }
         }
-        public void Send(object obj) => MessagesVM.Messages.Add(new Message("test2", "test1", "lalal"));
     }
 }

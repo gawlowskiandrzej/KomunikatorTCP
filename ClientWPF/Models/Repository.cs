@@ -31,12 +31,7 @@ namespace ClientWPF.Models
                 if (messages?.Count() > 0)
                     return messages;
 
-                messages = new ObservableCollection<Message>
-                {
-                    new Message("UserTest","UserTest1", "wiadomosc1"),
-                    new Message("UserTest1","UserTest2", "wiadomosc2"),
-                    new Message("UserTest2","UserTest1", "wiadomosc3")
-                };
+                messages = new ObservableCollection<Message>();
                 return messages;
             }
             set
@@ -52,7 +47,7 @@ namespace ClientWPF.Models
         // IMplement logged user 
 
         public User GetLoggedUser() => LoggedUser;
-        public void SetLoggedUser(User User) => LoggedUser = User;
+        public void SetLoggedUser(User User) { User.IsConnected = true; LoggedUser = User;}
 
         public IEnumerable<User> GetUsers()
         {

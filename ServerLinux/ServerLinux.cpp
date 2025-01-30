@@ -12,6 +12,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <chrono>
+#include <thread>
 #include <sqlite3.h>
 
 #define PORT 8080
@@ -125,8 +127,8 @@ void sendMessage(const std::string& message) {
         if (receiver == client->username) {
             if (client->isOnline) {
                 write(client->cfd, message.c_str(), message.size());
-                printf("Message sent to user %s\n", client->username.c_str());
-                return;
+                printf("Message sent to user %s and saved to database\n", client->username.c_str());
+                break;
             }
         }
     }
@@ -175,7 +177,7 @@ void handle_client(void* arg) {
 }
 
 void sendStoredMessages(Client* client) {
-    std::string sql = "SELECT wiadomosc FROM komunikacja WHERE wiadomosc LIKE '1:%:" + client->username + ":%';";
+    std::string sql = "SELECT wiadomosc FROM komunikacja WHERE wiadomosc LIKE '1:%:" + client->username + ":%' or wiadomosc LIKE '1:" + client->username + ":%:%';";
     sqlite3_stmt* stmt;
 
     if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
@@ -186,16 +188,18 @@ void sendStoredMessages(Client* client) {
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         std::string message = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
         write(client->cfd, message.c_str(), message.size());
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
-
+    std::string message = "1::" + client->username + ":";
+    write(client->cfd, message.c_str(), message.size());
     sqlite3_finalize(stmt);
 
-    sql = "DELETE FROM komunikacja WHERE wiadomosc LIKE '%:" + client->username + ":%';";
+    /*sql = "DELETE FROM komunikacja WHERE wiadomosc LIKE '%:" + client->username + ":%';";
     char* errMessage = nullptr;
     if (sqlite3_exec(db, sql.c_str(), nullptr, 0, &errMessage) != SQLITE_OK) {
         std::cerr << "Failed to delete messages: " << errMessage << std::endl;
         sqlite3_free(errMessage);
-    }
+    }*/
 }
 
 void Connect(int clientSocket, sockaddr_in clientAddress, std::string username) {
