@@ -23,18 +23,10 @@ std::vector<class Client*> clients;
 std::mutex clients_mutex;
 sqlite3* db; // Globalna baza danych
 
-#pragma region HelpFunctions
 int numberOfCharsInArray(const std::string& str) {
     return str.length();
 }
 
-static int callback(void* NotUsed, int argc, char** argv, char** azColName) {
-    for (int i = 0; i < argc; i++) {
-        std::cout << (argv[i] ? argv[i] : "NULL") << "\t";
-    }
-    std::cout << std::endl;
-    return 0;
-}
 
 std::vector<std::string> split_string(const std::string& str, char delim = ':') {
     std::vector<std::string> tokens;
@@ -54,7 +46,6 @@ std::vector<std::string> split_string(const std::string& str, char delim = ':') 
     }
     return tokens;
 }
-#pragma endregion
 
 class Packet {
 public:
