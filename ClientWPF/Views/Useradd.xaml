@@ -35,7 +35,12 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.ColumnSpan="3" FontWeight="SemiBold" Text="Podaj nazwę użytkownika" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="25"/>
-            <TextBox Text="{Binding Username}" VerticalContentAlignment="Center" Grid.Row="1" Grid.Column="1" Height="30"/>
+            <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" Grid.Row="1" Grid.Column="1" Height="30">
+                <TextBox.InputBindings>
+                    <KeyBinding Key="Enter"
+                        Command="{Binding AddUser}"/>
+                </TextBox.InputBindings>
+            </TextBox>
             <Button Style="{StaticResource BasicButt}" Command="{Binding AddUser}" Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" Width="150" Height="30" Content="Dodaj użytkownika"/>
         </Grid>
     </Grid>

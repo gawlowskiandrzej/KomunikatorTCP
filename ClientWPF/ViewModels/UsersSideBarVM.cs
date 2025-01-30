@@ -13,7 +13,7 @@ namespace ClientWPF.ViewModels
         public ObservableCollection<User> Users 
         {
             get => _users;
-            set { _users = value;  } 
+            set { _users = value; OnPropertyChanged();  } 
         }
         private User _selectedUser;
 

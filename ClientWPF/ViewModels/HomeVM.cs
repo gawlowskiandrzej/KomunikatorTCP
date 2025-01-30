@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Input;
 using System;
 using ClientWPF.Models.Controlers;
+using System.Net.Sockets;
 
 namespace ClientWPF.ViewModels
 {
@@ -50,11 +51,14 @@ namespace ClientWPF.ViewModels
                     try
                     {
                         var message = user.MessageControler.Receive();
+                        if (_cancellationTokenSource is null) return;
+                        if (_cancellationTokenSource.IsCancellationRequested) { return; }
                         if (message != null)
                         {
                             if (message.UserFrom == "") { _cancellationTokenSource.Cancel(); return; } // Stop receive load packets
                             Application.Current.Dispatcher.Invoke(() =>
                             {
+                                
                                 MainVM.Repository.Messages.Add(message);
                                 MessagesVM.UpdateMessages();
                             });
@@ -64,6 +68,10 @@ namespace ClientWPF.ViewModels
                         await Task.Delay(10, token);
                     }
                     catch (TaskCanceledException)
+                    {
+                        break;
+                    }
+                    catch(SocketException)
                     {
                         break;
                     }
@@ -95,6 +103,8 @@ namespace ClientWPF.ViewModels
                 Message mess = new Message(loggedUser.Name, SelectedUser.Name, MessageText);
                 MainVM.Repository.Messages.Add(mess);
                 MessagesVM.UpdateMessages();
+                MessageText = "";
+                OnPropertyChanged(nameof(MessageText));
             }
         }
     }

@@ -64,6 +64,8 @@ namespace ClientWPF.ViewModels
                 if (User.ConnectControler.Client.Connected)
                 {
                     LoadingView.StartAnimation();
+                    MainVM.Repository.Users.Clear();
+                    MainVM.Repository.Messages.Clear();
                     MainVM.Repository.SetLoggedUser(User);
                     // TODO: Loading screen
                     await LoadMessageHistory();

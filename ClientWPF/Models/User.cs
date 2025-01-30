@@ -1,6 +1,7 @@
 ﻿using ClientWPF.Models.Controlers;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace ClientWPF.Models
 {
@@ -44,7 +45,27 @@ namespace ClientWPF.Models
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
+        public void Logout()
+        {
+            if (ConnectControler != null && ConnectControler.Client != null)
+            {
+                try
+                {
+                    ConnectControler.Client.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                    ConnectControler.Client.Close();
+                }
+                catch (System.Exception e)
+                {
+                    MessageBox.Show($"Error during logout: {e.Message}");
+                }
+                finally
+                {
+                    ConnectControler.Client = null;
+                    _isConnected = false;
+                    OnPropertyChanged(nameof(IsConnected));
+                }
+            }
+        }
         public override string ToString()
         {
             return this.Name;

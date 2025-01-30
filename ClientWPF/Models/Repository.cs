@@ -41,7 +41,16 @@ namespace ClientWPF.Models
         }
         //public event PropertyChangedEventHandler PropertyChanged;
 
-        public User GetSelectedUser() => Users.Where(_ => _.IsSelected).First();
+        public User GetSelectedUser() 
+        {
+            var user = Users.Where(_ => _.IsSelected).FirstOrDefault();
+            if (user is null)
+            { 
+                user = Users.Last();
+                user.IsSelected = true;
+            }
+            return user;   
+        }
 
         // TODO: LOGGED USER SELECTION
         // IMplement logged user 
@@ -75,7 +84,7 @@ namespace ClientWPF.Models
             foreach (var user in users)
             {
                 user.IsSelected = false;
-                if (selectedUser.Name == user.Name)
+                if (selectedUser?.Name == user.Name)
                     user.IsSelected = true;
             }
 

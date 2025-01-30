@@ -54,7 +54,7 @@
             <Button Grid.Column="1" Margin="0 7 10 7" Style="{StaticResource SendButton}" HorizontalAlignment="Right" Command="{Binding SendMessgeCommand}">
                 <iconPacks:PackIconModern Margin="12 3 12 0" HorizontalAlignment="Center" VerticalAlignment="Center" Height="20" Width="20" Kind="Message"/>
             </Button>
-            <TextBox Background="Transparent" VerticalContentAlignment="Center" BorderThickness="0" Padding="20 10" FontSize="13" Text="{Binding MessageText}">
+            <TextBox Background="Transparent" VerticalContentAlignment="Center" BorderThickness="0" Padding="20 10" FontSize="13" Text="{Binding MessageText, UpdateSourceTrigger=PropertyChanged}">
                 <TextBox.InputBindings>
                     <KeyBinding Key="Enter"
                                 Command="{Binding SendMessgeCommand}"/>

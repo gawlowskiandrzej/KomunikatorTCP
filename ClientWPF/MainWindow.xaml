@@ -36,7 +36,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <ContentControl Visibility="Collapsed" Grid.ColumnSpan="999"
+            <ContentControl Grid.ColumnSpan="999"
             Grid.RowSpan="999" Content="{Binding LoginView}" Panel.ZIndex="3"/>
 
             <ContentControl Grid.ColumnSpan="999"
@@ -50,7 +50,7 @@
                        Foreground="{DynamicResource Pallete3}"/>
 
 
-            <Border Margin="15" Background="White" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderThickness="3" BorderBrush="{DynamicResource BackGround}">
+            <Border Margin="15" Grid.RowSpan="2" Background="White" Grid.Column="1" Grid.Row="1" CornerRadius="15" BorderThickness="3" BorderBrush="{DynamicResource BackGround}">
                 <ContentControl 
                                 Grid.Column="1" 
                                 Grid.Row="1" 
@@ -60,6 +60,9 @@
             <Grid Grid.Column="0" Grid.Row="1">
                 <ContentControl Content="{Binding UsersSideBarVM}"/>
             </Grid>
+            
+            
+            
             <Grid Margin="30 0 0 0" Grid.Row="0" Grid.Column="1" Panel.ZIndex="3">
                 <Grid.Resources>
                     <Style TargetType="Button" BasedOn="{StaticResource SidebarButt}"/>
@@ -69,12 +72,17 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
-                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="1.2*"/>
                 </Grid.ColumnDefinitions>
                 <!-- Test Button -->
                 <Button Visibility="{Binding buttonVisibility}" Grid.Column="0" Content="Home" Command="{Binding HomeCommand}"/>
                 <Button Visibility="{Binding buttonVisibility}" Grid.Column="1" Content="Użytkownicy" Command="{Binding UserCommand}"/>
                 <Button Visibility="{Binding buttonVisibility}" Grid.Column="2" Content="Wyloguj" Command="{Binding LogoutCommand}"/>
+                <TextBlock Grid.Column="3" Panel.ZIndex="1" 
+                   HorizontalAlignment="Center" 
+                   VerticalAlignment="Center" 
+                   Text="{Binding LoggedUser}" 
+                   Foreground="{DynamicResource Pallete3}" Visibility="{Binding buttonVisibility}"/>
 
                 <Grid Margin="0 0 15 0" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Right">
                     <Grid.ColumnDefinitions>

@@ -26,7 +26,7 @@
             </Grid.RowDefinitions>
             <TextBlock VerticalAlignment="Bottom" FontWeight="SemiBold" HorizontalAlignment="Center" Text="Trwa ładowanie wiadomości" FontSize="20"/>
             <!--<TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="...." Grid.Row="1" FontSize="40"/>-->
-            <ProgressBar Background="{DynamicResource Pallete1}" Foreground="{DynamicResource Pallete2}" Grid.Row="1" Height="30" Width="300" Maximum="100" Value="{Binding AnimatedBarValue}"/>
+            <ProgressBar IsIndeterminate="True" Background="{DynamicResource Pallete1}" Foreground="{DynamicResource Pallete2}" Grid.Row="1" Height="30" Width="300"/>
         </Grid>
     </Grid>
 </UserControl>

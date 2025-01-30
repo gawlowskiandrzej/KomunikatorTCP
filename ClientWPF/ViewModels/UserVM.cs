@@ -5,9 +5,11 @@ namespace ClientWPF.ViewModels
 {
     internal class UserVM : ViewModelBase
     {
-        public string Username { get; set; } = "username";
+        private bool _addedUser;
+
+        public string Username { get; set; }
         public ICommand AddUser { get; set; }
-        public bool AddedUser { get; set; }
+        public bool AddedUser { get => _addedUser; set { _addedUser = value; OnPropertyChanged(); } }
 
         public UserVM()
         {
@@ -18,6 +20,7 @@ namespace ClientWPF.ViewModels
         {
             MainVM.Repository.Users.Add(new Models.User(Username));
             //TODO: ADD USER, UPDATE Side bar.
+            AddedUser = true;
         }
     }
 }
