@@ -7,16 +7,18 @@ namespace ClientWPF.Models
     internal class Repository : IUserRepository, IMessageRepository
     {
         private List<User> users;
-        public List<User> Users { 
-            get 
+        private User LoggedUser;
+        public List<User> Users
+        {
+            get
             {
                 if (users?.Count() > 0)
                     return users;
 
                 users = new List<User>();
                 return users;
-            } 
-            set 
+            }
+            set
             {
                 users = value;
             }
@@ -49,19 +51,8 @@ namespace ClientWPF.Models
         // TODO: LOGGED USER SELECTION
         // IMplement logged user 
 
-        public User GetLoggedUser() => Users.Where(_ => _.IsConnected).FirstOrDefault();
-        public void SetLoggedUser(User User)
-        {
-            for (int i = 0; i < Users.Count(); i++)
-            {
-                Users[i].IsConnected = false;
-                if (Users[i].Name == User.Name)
-                {
-                    User.IsConnected = true;
-                    Users[i] = User;
-                }
-            }
-        }
+        public User GetLoggedUser() => LoggedUser;
+        public void SetLoggedUser(User User) => LoggedUser = User;
 
         public IEnumerable<User> GetUsers()
         {
@@ -69,7 +60,7 @@ namespace ClientWPF.Models
 
             foreach (var message in this.Messages)
             {
-                if (message.UserFrom !=loggedUser.Name  && !Users.Any(u => u?.Name == message.UserFrom))
+                if (message.UserFrom != loggedUser.Name && !Users.Any(u => u?.Name == message.UserFrom))
                 {
                     Users.Add(new User(message.UserFrom));
                 }
@@ -92,7 +83,7 @@ namespace ClientWPF.Models
                 if (selectedUser.Name == user.Name)
                     user.IsSelected = true;
             }
-            
+
         }
 
         public IEnumerable<Message> GetMessages() => messages;

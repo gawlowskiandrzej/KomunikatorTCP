@@ -195,6 +195,7 @@
     <Compile Include="ViewModels\MessagesVM.cs" />
     <Compile Include="ViewModels\RoomsVM.cs" />
     <Compile Include="ViewModels\UsersSideBarVM.cs" />
+    <Compile Include="ViewModels\UserVM.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\CurrentMessages.xaml.cs">
       <DependentUpon>CurrentMessages.xaml</DependentUpon>
@@ -210,6 +211,9 @@
     </Compile>
     <Compile Include="Views\Rooms.xaml.cs">
       <DependentUpon>Rooms.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Useradd.xaml.cs">
+      <DependentUpon>Useradd.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UsersSideBar.xaml.cs">
       <DependentUpon>UsersSideBar.xaml</DependentUpon>
@@ -279,6 +283,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Rooms.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Useradd.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -40,6 +40,10 @@ namespace ClientWPF.ViewModels
             OnPropertyChanged(nameof(SelectedUser));
             OnPropertyChanged(nameof(Users));
         }
+        public void RefreshUser()
+        {
+            //TODO: Maybe not needed check
+        }
         public void SelectUser(object obj)
         {
             SelectedUser = obj as User;
