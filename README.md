@@ -1,97 +1,90 @@
-<<<<<<< HEAD
-# GG
-=======
-# Gg
+﻿# Komunikator internetowy typu GG
 
+## Opis protokołu komunikacyjnego
+W naszym projekcie wykorzystaliśmy protokół **TCP** do komunikacji między serwerem a klientem. Jest to protokół połączeniowy, co oznacza, że wymaga nawiązania i zakończenia sesji. Dodatkowo, zapewnia niezawodność poprzez retransmisję pakietów, które nie dotarły do celu.
 
+## Opis implementacji
+### Implementacja serwera
+Podczas uruchomienia serwera otwierana jest **zewnętrzna baza danych**. Jeśli baza nie istnieje, zostaje utworzona. Służy ona do przechowywania wiadomości wysłanych do użytkowników.
 
-## Getting started
+Serwer:
+- Nasłuchuje na przychodzące połączenia od klientów na wskazanym porcie.
+- Obsługuje komunikację w formacie:
+  ```
+  1:UserNameSource:UserNameDestination:Message
+  ```
+  - `1` – identyfikator formatu wiadomości,
+  - `UserNameSource` – nazwa nadawcy,
+  - `UserNameDestination` – nazwa odbiorcy,
+  - `Message` – treść wiadomości.
+- **Przykład** wiadomości: `1:Klient1:Klient2:Hej`.
+- Jeśli odbiorca jest **online**, wiadomości są wysyłane natychmiast.
+- Jeśli odbiorca jest **offline**, wiadomości są przechowywane w bazie danych.
+- Serwer jest **współbieżny** – każdy klient jest obsługiwany w osobnym wątku.
+- Każda wiadomość jest zapisywana do bazy danych w celu archiwizacji konwersacji.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+### Implementacja klienta
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+Klient został zaimplementowany w języku **C#** w popularnym i często używanym frameworku **WPF** do tworzenia dynamicznych aplikacji desktopowych.
+Dla przejrzystości kodu skorzystaliśmy ze wzorca MVVM czyli **model-view**, **view**, **model** rozdzielając tym samym logię aplikacji od jej części graficznej.
 
-## Add your files
+---
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+#### Okna aplikacji
 
+1. `Login view` - okno logowania pozwalające połączyć użytkownika z serwerem aplikacji oraz pobranie wiadomości zarchiwizowanych 
+2. `Home view` - główne okno aplikacji po zalogowaniu przedstawiające wszystkie kontrolki, inicjujące zdarzania takie jak ciągłe pobieranie nowych wiadomości 
+3. `UserSideBar view` - okno po lewej stronie przedstawiwające wszystkich użytkowników z którymi rozmawialiśmy do tej pory, obsługuje ona zdarzenia takie jak selekcja konkretnego użytkownika
+4. `Messages view` - okno tylko dla wiadomości wyświetlające przeprowadzone konwersacje, pokazuje po prawej wysłane wiadomości z naszego konta, a po lewej wiadomości użytkownika do którego pisaliśmy
+5. `Useradd view` - okno ,,Użytkownicy" które pozwala dodać nowego użytkownika do konwersacji
+
+Przełaczanie między konkretnymi oknami odbywa się przez naciskanie odpowiednich przycisków na interfejsie.
+Staraliśmy się aby interfejs był czytelny, lekki, minimalistczny i prosty w tym celu zastosowaliśmy paletę 5 kolorów:
+
+- ![#c5ebff](https://placehold.co/15x15/#c5ebff/#c5ebff.png) `#c5ebff`
+- ![#8cd6ff](https://placehold.co/15x15/#8cd6ff/#8cd6ff.png) `#8cd6ff`
+- ![#052232](https://placehold.co/15x15/#052232/#052232.png) `#052232`
+- ![#073148](https://placehold.co/15x15/#073148/#073148.png) `#073148`
+- ![#EBF1F4](https://placehold.co/15x15/#EBF1F4/#EBF1F4.png) `#EBF1F4`
+
+oraz czcionkę Rubik medium oraz regular.
+
+### Wizualizacja klienta
+
+![konwersacja klientów](https://gitlab.com/[inf155198]/[reponame]/blob/[branch]/Klienci.png?raw=true)
+
+## Kompilacja, uruchomienie i obsługa
+### Kompilacja serwera na Linuxie
+Aby skompilować serwer, użyj polecenia:
+```bash
+g++ -Wall ServerLinux.cpp -lsqlite3 -o [nazwa_wyjściowa]
 ```
-cd existing_repo
-git remote add origin https://git.cs.put.poznan.pl/projekt-sk2/gg.git
-git branch -M main
-git push -uf origin main
-```
+> **Wymagania**:
+> - Biblioteka `sqlite3` (instalacja: `sudo apt install sqlite3` na Ubuntu).
+> - Flaga `-lsqlite3` w poleceniu kompilującym.
 
-## Integrate with your tools
+### Uruchomienie serwera
+Aby uruchomić serwer wpisz w konsoli ścieżkę do pliku wykonywalnego.
 
-- [ ] [Set up project integrations](https://git.cs.put.poznan.pl/projekt-sk2/gg/-/settings/integrations)
+### Uruchomienie klienta
+Aby uruchomić klienta wyszukaj plik ClientWPF.exe, możesz również wprowadzić parametry: pierwszy z nich to:
+1. ip serwera
+2. port serwera
+**Domyślna opcja** to ip adres 192.168.0.102 oraz port 8080
 
-## Collaborate with your team
+### Obsługa klienta
+1. Po uruchomieniu aplikacji klienta użytkownik podaje **nazwę użytkownika** (nick) oraz klika **zaloguj**.
+2. Po zalogowaniu użytkownik widzi ekran z wiadomościami.
+3. Z lewej strony znajduje się **lista użytkowników**, z którymi prowadził rozmowy.
+4. Po prawej na górze, obok przycisków funkcyjnych znajduję się nazwa obecnie zalogowanego użytkownika.
+5. Aby rozpocząć rozmowę z nowym użytkownikiem:
+   - Kliknij **„Użytkownicy”**.
+   - Wpisz **nick odbiorcy**.
+   - Kliknij przycisk **dodawania użytkownika**.
+6. Powrót do ekranu wiadomości – kliknij **„Home”**.
+7. Aby zmienić konto, kliknij **„Wyloguj”** a następnie zaloguj się na nowe konto.
+8. Wysyłanie wiadomości:
+   - Kliknięcie **Enter**.
+   - Kliknięcie **ikonki dymku**.
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
->>>>>>> a2c81acd82d23180ac4a209210ab0941ce4892c2
+---

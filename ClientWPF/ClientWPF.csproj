@@ -191,7 +191,6 @@
     <Compile Include="ViewModels\LoginVM.cs" />
     <Compile Include="ViewModels\MainVM.cs" />
     <Compile Include="ViewModels\MessagesVM.cs" />
-    <Compile Include="ViewModels\RoomsVM.cs" />
     <Compile Include="ViewModels\UsersSideBarVM.cs" />
     <Compile Include="ViewModels\UserVM.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />

@@ -121,6 +121,7 @@ namespace ClientWPF.ViewModels
                 // TODO: make added visual to usersidebar
                 UsersSideBarVM.Users = null;
                 UsersSideBarVM.Users = new System.Collections.ObjectModel.ObservableCollection<User>(Repository.Users);
+                UsersSideBarVM.SelectedUser = Repository.GetSelectedUser();
                 buttonVisibility = Visibility.Visible;
                 UserVM = null;
             }
