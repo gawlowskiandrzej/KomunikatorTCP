@@ -51,7 +51,7 @@ oraz czcionkę Rubik medium oraz regular.
 
 ### Wizualizacja klienta
 
-![konwersacja klientów](https://gitlab.com/[inf155198]/[reponame]/blob/[branch]/Klienci.png?raw=true)
+![konwersacja klientów](https://git.cs.put.poznan.pl/projekt-sk2/gg/-/blob/development/Klienci.png?ref_type=heads)
 
 ## Kompilacja, uruchomienie i obsługa
 ### Kompilacja serwera na Linuxie
@@ -70,7 +70,7 @@ Aby uruchomić serwer wpisz w konsoli ścieżkę do pliku wykonywalnego.
 Aby uruchomić klienta wyszukaj plik ClientWPF.exe, możesz również wprowadzić parametry: pierwszy z nich to:
 1. ip serwera
 2. port serwera
-**Domyślna opcja** to ip adres 192.168.0.102 oraz port 8080
+3.**Domyślna opcja** to ip adres 192.168.0.102 oraz port 8080
 
 ### Obsługa klienta
 1. Po uruchomieniu aplikacji klienta użytkownik podaje **nazwę użytkownika** (nick) oraz klika **zaloguj**.
