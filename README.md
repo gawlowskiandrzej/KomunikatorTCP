@@ -3,7 +3,6 @@
 ## Opis protokołu komunikacyjnego
 W naszym projekcie wykorzystaliśmy protokół **TCP** do komunikacji między serwerem a klientem. Jest to protokół połączeniowy, co oznacza, że wymaga nawiązania i zakończenia sesji. Dodatkowo, zapewnia niezawodność poprzez retransmisję pakietów, które nie dotarły do celu.
 
-## Opis implementacji
 ### Implementacja serwera
 Podczas uruchomienia serwera otwierana jest **zewnętrzna baza danych**. Jeśli baza nie istnieje, zostaje utworzona. Służy ona do przechowywania wiadomości wysłanych do użytkowników.
 
@@ -55,9 +54,7 @@ oraz czcionkę Rubik medium oraz regular.
 
 ![konwersacja klientów](https://git.cs.put.poznan.pl/projekt-sk2/gg/-/raw/development/Klienci.jpg)
 
----
 
-## Kompilacja, uruchomienie i obsługa
 ### Kompilacja serwera na Linuxie
 Aby skompilować serwer, użyj polecenia:
 ```bash
