@@ -11,8 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementy rozwiązania", "El
 	ProjectSection(SolutionItems) = preProject
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
-		Klienci.png = Klienci.png
 		LICENSE.txt = LICENSE.txt
+		Klienci.jpg = Klienci.jpg
 		README.md = README.md
 	EndProjectSection
 EndProject
