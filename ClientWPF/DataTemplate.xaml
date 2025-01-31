@@ -15,15 +15,17 @@
         <view:Messages/>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type vm:RoomsVM}">
-        <view:Rooms/>
-    </DataTemplate>
 
     <DataTemplate DataType="{x:Type vm:UsersSideBarVM}">
         <view:UsersSideBar/>
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:CurrentMessagesVM}">
-        <view:CurrentMessages/>
+
+    <DataTemplate DataType="{x:Type vm:UserVM}">
+        <view:Useradd/>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type vm:LoadingVM}">
+        <view:LoadingView/>
     </DataTemplate>
 
 </ResourceDictionary>

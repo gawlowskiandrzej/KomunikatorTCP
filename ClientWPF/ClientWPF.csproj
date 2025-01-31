@@ -183,24 +183,22 @@
     <Compile Include="Models\Interfaces\ISender.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\Repository.cs" />
-    <Compile Include="Models\Type.cs" />
     <Compile Include="Models\NavBarMaxButt.cs" />
-    <Compile Include="Models\Room.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="ViewModels\CurrentMessagesVM.cs" />
     <Compile Include="ViewModels\HomeVM.cs" />
     <Compile Include="Models\Interfaces\IUserRepository.cs" />
+    <Compile Include="ViewModels\LoadingVM.cs" />
     <Compile Include="ViewModels\LoginVM.cs" />
     <Compile Include="ViewModels\MainVM.cs" />
     <Compile Include="ViewModels\MessagesVM.cs" />
-    <Compile Include="ViewModels\RoomsVM.cs" />
     <Compile Include="ViewModels\UsersSideBarVM.cs" />
+    <Compile Include="ViewModels\UserVM.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
-    <Compile Include="Views\CurrentMessages.xaml.cs">
-      <DependentUpon>CurrentMessages.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Home.xaml.cs">
       <DependentUpon>Home.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LoadingView.xaml.cs">
+      <DependentUpon>LoadingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
@@ -208,8 +206,8 @@
     <Compile Include="Views\Messages.xaml.cs">
       <DependentUpon>Messages.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Rooms.xaml.cs">
-      <DependentUpon>Rooms.xaml</DependentUpon>
+    <Compile Include="Views\Useradd.xaml.cs">
+      <DependentUpon>Useradd.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UsersSideBar.xaml.cs">
       <DependentUpon>UsersSideBar.xaml</DependentUpon>
@@ -262,11 +260,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\CurrentMessages.xaml">
+    <Page Include="Views\Home.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Home.xaml">
+    <Page Include="Views\LoadingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -278,7 +276,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Rooms.xaml">
+    <Page Include="Views\Useradd.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,7 +1,11 @@
 ﻿using ClientWPF.Commands;
 using ClientWPF.Models;
 using ClientWPF.Models.Interfaces;
+using ClientWPF.Views;
+using System;
 using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using System.Windows;
 using System.Windows.Input;
@@ -10,22 +14,37 @@ namespace ClientWPF.ViewModels
 {
     internal class MainVM : ViewModelBase
     {
-        public static IUserRepository UserRepository { get; set; }
+        public static Repository Repository { get; set; }
 
         private object currentView;
+        private UsersSideBarVM _usersSideBarVM;
+        private Visibility _buttonVisibility;
+        private UserVM _userVM;
+        private User _loggedUser;
 
-        public User SelectedUser { get; set; }
+        public User LoggedUser { get => _loggedUser; set { _loggedUser = value; OnPropertyChanged(); } }
 
-        public ICommand  HomeCommand { get; set; }
-        public ICommand  LoginCommand { get; set; }
-        public ICommand  ExitCommand { get; set; }
-        public ICommand  MinimalizeCommand { get; set; }
+        public Visibility buttonVisibility { get => _buttonVisibility; set { _buttonVisibility = value; OnPropertyChanged(); } }
+        public ICommand HomeCommand { get; set; }
+        public ICommand UserCommand { get; set; }
+        public ICommand LogoutCommand { get; set; }
+        public ICommand ExitCommand { get; set; }
+        public ICommand MinimalizeCommand { get; set; }
 
-        public UsersSideBarVM UsersSideBarVM { get; set; }
+        public UsersSideBarVM UsersSideBarVM { get => _usersSideBarVM; set { _usersSideBarVM = value; OnPropertyChanged(); } }
         public LoginVM LoginView { get; set; }
+        public UserVM UserVM { get => _userVM; set { _userVM = value; OnPropertyChanged(); } }
 
-        public void Home(object obj) => CurrentView = new HomeVM();
-        public void Login(object obj) => CurrentView = new LoginVM();
+        public HomeVM HomeVM { get; set; }
+
+        public void Home(object obj)
+        {
+            if (!(CurrentView is HomeVM))
+            {
+                CurrentView = HomeVM;
+            }
+            UserVM = null;
+        }
         public void Exit(object obj) => Application.Current.Shutdown();
         public void Minimalize(object obj) => Application.Current.MainWindow.WindowState = WindowState.Minimized;
 
@@ -38,40 +57,73 @@ namespace ClientWPF.ViewModels
                 OnPropertyChanged();
             }
         }
+        // Punkt startowy
         public MainVM()
         {
             HomeCommand = new RelayCommand(Home);
-            LoginCommand = new RelayCommand(Login);
+            LogoutCommand = new RelayCommand(Logout);
             ExitCommand = new RelayCommand(Exit);
+            UserCommand = new RelayCommand(UserViewAction);
             MinimalizeCommand = new RelayCommand(Minimalize);
-            UserRepository = new Repository();
-            SelectedUser = UserRepository.GetSelectedUser();
-
+            Repository = new Repository();
             LoginView = new LoginVM();
-            LoginView.User.PropertyChanged += LoginView_PropertyChanged1;
-
+            LoginView.PropertyChanged += LoginView_PropertyChanged1;
+            buttonVisibility = Visibility.Hidden;
+        }
+        private void Init()
+        {
+            // Update CurrentView based on the new SelectedUser
             UsersSideBarVM = new UsersSideBarVM();
             UsersSideBarVM.PropertyChanged += OnUsersSideBarChanged;
 
-            CurrentView = new HomeVM();
-        }
+            HomeVM = new HomeVM();
+            CurrentView = HomeVM;
 
+            buttonVisibility = Visibility.Visible;
+            LoginView.ViewVisibility = Visibility.Collapsed;
+            LoggedUser = Repository.GetLoggedUser();
+        }
         private void LoginView_PropertyChanged1(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(LoginView.User.IsConnected))
+            if (e.PropertyName == nameof(LoginView.IsInitialized))
             {
-                // Update CurrentView based on the new SelectedUser
-                (CurrentView as HomeVM).CurrentUser = LoginView.User;
+                Init();
                 (CurrentView as HomeVM).StartMessageListening();
             }
         }
-
         public void OnUsersSideBarChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(UsersSideBarVM.SelectedUser))
             {
                 // Update CurrentView based on the new SelectedUser
-                CurrentView = new HomeVM(UsersSideBarVM.SelectedUser);
+                MainVM.Repository.SetSelection(UsersSideBarVM.SelectedUser);
+                (CurrentView as HomeVM).ChangeSelection();
+            }
+        }
+        public void Logout(object obj)
+        {
+            UserVM = null;
+            MainVM.Repository.GetLoggedUser().Logout();
+            (CurrentView as HomeVM)?.StopMessageListening();
+            LoginView.ViewVisibility = Visibility.Visible;
+            buttonVisibility = Visibility.Hidden;
+        }
+        public void UserViewAction(object obj)
+        {
+            UserVM = new UserVM();
+            UserVM.PropertyChanged += UserVM_PropertyChanged;
+        }
+
+        private void UserVM_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(UserVM.AddedUser))
+            {
+                // TODO: make added visual to usersidebar
+                UsersSideBarVM.Users = null;
+                UsersSideBarVM.Users = new System.Collections.ObjectModel.ObservableCollection<User>(Repository.Users);
+                UsersSideBarVM.SelectedUser = Repository.GetSelectedUser();
+                buttonVisibility = Visibility.Visible;
+                UserVM = null;
             }
         }
     }

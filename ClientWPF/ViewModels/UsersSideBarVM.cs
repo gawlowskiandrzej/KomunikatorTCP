@@ -2,27 +2,28 @@
 using ClientWPF.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace ClientWPF.ViewModels
 {
     internal class UsersSideBarVM : ViewModelBase
     {
-        private IEnumerable<User> _users;
-        public IEnumerable<User> Users 
-        { 
-            get => MainVM.UserRepository?.GetUsers();
-            set { _users = value;  } 
+        private ObservableCollection<User> _users;
+        public ObservableCollection<User> Users 
+        {
+            get => _users;
+            set { _users = value; OnPropertyChanged();  } 
         }
         private User _selectedUser;
 
         public User SelectedUser
         {
-            get => MainVM.UserRepository?.GetSelectedUser(); 
+            get => _selectedUser; 
             set
             {
                 _selectedUser = value;
-                MainVM.UserRepository.SetSelection(value);
+                MainVM.Repository.SetSelection(value);
                 OnPropertyChanged();
             }
 
@@ -32,8 +33,16 @@ namespace ClientWPF.ViewModels
         public UsersSideBarVM()
         {
             SelectUserCommand = new RelayCommand(SelectUser);
-            Users = MainVM.UserRepository?.GetUsers();
-            SelectedUser = MainVM.UserRepository?.GetSelectedUser();
+            Users = new ObservableCollection<User>(MainVM.Repository.Users);
+            //Users[0].IsSelected = true;
+            SelectedUser = MainVM.Repository?.GetSelectedUser();
+
+            OnPropertyChanged(nameof(SelectedUser));
+            OnPropertyChanged(nameof(Users));
+        }
+        public void RefreshUser()
+        {
+            //TODO: Maybe not needed check
         }
         public void SelectUser(object obj)
         {

@@ -15,6 +15,7 @@ namespace ClientWPF.Models.Controlers
 
         public ConnectControler(string dstAddr = "192.168.0.102", int port = 8080)
         {
+            // TODO dstAddr parametr , port
             DstAddr = dstAddr;
             Port = port;
 

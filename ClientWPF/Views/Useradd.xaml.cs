@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace ClientWPF.Views
 {
     /// <summary>
-    /// Logika interakcji dla klasy Rooms.xaml
+    /// Logika interakcji dla klasy Useradd.xaml
     /// </summary>
-    public partial class Rooms : UserControl
+    public partial class Useradd : UserControl
     {
-        public Rooms()
+        public Useradd()
         {
             InitializeComponent();
         }
