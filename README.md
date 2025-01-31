@@ -49,9 +49,13 @@ Staraliśmy się aby interfejs był czytelny, lekki, minimalistczny i prosty w t
 
 oraz czcionkę Rubik medium oraz regular.
 
+---
+
 ### Wizualizacja klienta
 
 ![konwersacja klientów](https://git.cs.put.poznan.pl/projekt-sk2/gg/-/raw/development/Klienci.jpg)
+
+---
 
 ## Kompilacja, uruchomienie i obsługa
 ### Kompilacja serwera na Linuxie
