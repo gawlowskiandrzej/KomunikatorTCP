@@ -31579,13 +31579,7 @@ static int sqlite3_os_type = 0;
 # define isNT()  (1)
 #else
   static int isNT(void){
-    if( sqlite3_os_type==0 ){
-      OSVERSIONINFO sInfo;
-      sInfo.dwOSVersionInfoSize = sizeof(sInfo);
-      GetVersionEx(&sInfo);
-      sqlite3_os_type = sInfo.dwPlatformId==VER_PLATFORM_WIN32_NT ? 2 : 1;
-    }
-    return sqlite3_os_type==2;
+    return 1;
   }
 #endif /* SQLITE_OS_WINCE */
 
