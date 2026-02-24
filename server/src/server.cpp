@@ -55,26 +55,28 @@ void Server::SendMessageToUser(const int dscOwner, const std::string& msg, const
         if (receiver == client->username) {
             if (client->isOnline) {
                 SOCKET_WRITE(client->cfd, msg.c_str(), msg.size());
-                printf("Message sent to user %s\n", client->username.c_str());
+                printf("%s sent to user %s\n", sender.c_str(), client->username.c_str());
                 break;
             }
         }
     }
 
     if (save)
-        dbService->addMessage(sender, receiver, msg);
+        dbService->addMessage(sender, receiver, msgContent);
 }
 
 void Server::HandleClientAction(Client* client)
 {
+    //printf("Client %s connected\n", get_addr_ip(client));
+    printf("Hello %s\n", client->username.c_str());
     char buffer[1024];
     while (true) {
         memset(buffer, 0, sizeof(buffer));
         int bytes = SOCKET_READ(client->cfd, buffer, sizeof(buffer));
-        if (bytes <= 0) break;
+        if (bytes <= 0) { printf("%s has disconnected!\n", client->username.c_str()); break; }
 
         std::string msg(buffer, bytes);
-        std::cout << "Received: " << msg << "\n";
+        
         Server::SendMessageToUser(client->cfd,msg, true);
 
         std::lock_guard<std::mutex> lock(clients_mutex);
@@ -114,6 +116,7 @@ void Server::SendHistoryMessages(const Client* client)
     for (auto& message : storedMessages)
         SOCKET_WRITE(client->cfd, message.c_str(), message.size());
 
+    // Terminator for end of loading messages
     std::string msg = "1::" + client->username + ":";
     SOCKET_WRITE(client->cfd, msg.c_str(), msg.size());
 }
