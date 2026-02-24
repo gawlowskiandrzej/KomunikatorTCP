@@ -103,8 +103,7 @@ namespace ClientWPF.ViewModels
                             });
                         }
 
-                        // Opcjonalnie: dodaj opóźnienie, aby zmniejszyć obciążenie procesora
-                        await Task.Delay(10, token);
+                        await Task.Delay(100, token);
                     }
                     catch (TaskCanceledException)
                     {

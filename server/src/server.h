@@ -11,6 +11,7 @@ public:
     ~Server();
 
     void run();
+    const int packet_delay = 100;
     void SendMessageToUser(const int dscOwner, const std::string& msg, const bool save = false);
 private:
     socket_t server_socket;

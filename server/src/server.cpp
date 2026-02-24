@@ -55,6 +55,7 @@ void Server::SendMessageToUser(const int dscOwner, const std::string& msg, const
         if (receiver == client->username) {
             if (client->isOnline) {
                 SOCKET_WRITE(client->cfd, msg.c_str(), msg.size());
+                std::this_thread::sleep_for(std::chrono::milliseconds(Server::packet_delay));
                 printf("%s sent to user %s\n", sender.c_str(), client->username.c_str());
                 break;
             }
@@ -83,6 +84,7 @@ void Server::HandleClientAction(Client* client)
         for (Client* client : clients) {
             if (client->cfd != client->cfd)
                 SOCKET_WRITE(client->cfd, msg.c_str(), msg.size());
+            std::this_thread::sleep_for(std::chrono::milliseconds(Server::packet_delay));
         }
     }
 
@@ -114,7 +116,10 @@ void Server::SendHistoryMessages(const Client* client)
 {
     auto storedMessages = dbService->getHisotryMessage(client->username);
     for (auto& message : storedMessages)
+    {
         SOCKET_WRITE(client->cfd, message.c_str(), message.size());
+        std::this_thread::sleep_for(std::chrono::milliseconds(Server::packet_delay));
+    }
 
     // Terminator for end of loading messages
     std::string msg = "1::" + client->username + ":";
